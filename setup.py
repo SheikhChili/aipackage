@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='ml-automation',
+    name='ai-package',
     version='1.0',
     license='MIT',
     author="SheikhChili",
