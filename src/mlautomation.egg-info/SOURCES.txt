@@ -1,0 +1,8 @@
+README.rst
+setup.cfg
+setup.py
+src/mlautomation.egg-info/PKG-INFO
+src/mlautomation.egg-info/SOURCES.txt
+src/mlautomation.egg-info/dependency_links.txt
+src/mlautomation.egg-info/requires.txt
+src/mlautomation.egg-info/top_level.txt
