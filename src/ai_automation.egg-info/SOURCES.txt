@@ -1,0 +1,8 @@
+README.rst
+setup.cfg
+setup.py
+src/ai_automation.egg-info/PKG-INFO
+src/ai_automation.egg-info/SOURCES.txt
+src/ai_automation.egg-info/dependency_links.txt
+src/ai_automation.egg-info/requires.txt
+src/ai_automation.egg-info/top_level.txt
