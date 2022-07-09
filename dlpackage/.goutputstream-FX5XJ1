@@ -1,0 +1,632 @@
+
+
+#import
+import threading
+import time
+import os
+import tensorflow as tf
+import numpy as np
+import ktrain
+import gradio as gr
+from ktrain import text
+from aipackage.dlpackage.CustomMetrics import CustomMetrics
+from aipackage.dlpackage.PackageVariable import Variable
+from aipackage.dlpackage.StoreData import InputOutputStream
+from aipackage.dlpackage.HyperParameterTuning import HyperParameterTuning
+from aipackage.dlpackage.DataConversion import DataConversion
+from aipackage.customThreading import ThreadWithReturnValue
+from aipackage.dlpackage.Entities import AccuracyEntity, HyperParameterEntity
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler,StandardScaler
+
+
+class Repository():
+	
+	
+	#init
+	def __init__(self):
+		self.type = None	
+		self.textType = None
+		self.userMetrics = None
+		self.wantTrainAllData = False
+		self.wantTestAllData = False
+		self.storedModelFileNameArray = []
+		self.datasetLocation = Variable.datasetLocation
+		
+		#initialize	
+		self.trainData = []
+		self.testData = []
+		self.labelData = []
+		
+		
+	def setType(self, typeValue):
+		self.type = typeValue	
+		
+		
+	def getType(self):
+		return self.type
+		
+		
+	def setTrainAllData(self, trainAllData):	
+		self.wantTrainAllData = trainAllData	
+		
+		
+	def setTestAllData(self, testAllData):	
+		self.wantTestAllData = testAllData				
+			
+	def setAllTrainData(self):
+		self.setTrainLabelData()
+		self.setAllConvertData()
+		
+		
+	def setTrainData(self, trainData):
+		self.trainData = trainData
+		
+	
+	def setTestData(self, testData):
+		self.testData = testData
+		
+		
+	def setLabelData(self, labelData):
+		self.labelData = labelData
+		
+				
+	def getOriTrainData(self):
+		return self.readPreprocessData(Variable.fileNamePrefix + Variable.trainPreprocessFileName)
+		
+			
+	def setTrainLabelData(self):
+		self.setOriPreprocessTrainSentenceArray(self.getOriTrainData())
+		self.setOriLabelArray(self.readPreprocessData(Variable.fileNamePrefix + Variable.labelFileName))
+		
+			
+	def setAllTestData(self):
+		fileNamePrefix = Variable.fileNamePrefix
+		self.setOriPreprocessTestSentenceArray(self.readPreprocessData(fileNamePrefix + Variable.testPreprocessFileName))
+		self.setAllConvertData()
+		
+					
+	def isDataPresent(self):
+		fileNamePrefix = Variable.preprocessFolderName + Variable.locationSeparator	
+		return self.checkFileExist(fileNamePrefix + Variable.trainPreprocessFileName)	  
+			
+			
+	def getTrainFileName(self):
+		return Variable.locationSeparator + Variable.featherFolderName + Variable.featherTrainFileName
+				
+				
+	def getTestFileName(self):
+		return Variable.locationSeparator + Variable.featherFolderName + Variable.featherTestFileName
+		
+					
+	def getTrainData(self, foldername):
+		filename = self.datasetLocation + foldername + self.getTrainFileName()
+		io = InputOutputStream()
+		return io.getStoredModelData(filename)	
+		
+		
+	def getTestData(self, foldername):
+		filename = self.datasetLocation + foldername + self.getTestFileName()
+		io = InputOutputStream()
+		return io.getStoredModelData(filename)
+		
+	
+	def convertTrainDataToFeather(self, folderName):
+		actualFolderPath = self.datasetLocation + folderName + Variable.locationSeparator
+		io = InputOutputStream()
+		io.checkAndSaveAsFeather(actualFolderPath, Variable.csvTrainFileName, Variable.featherTrainFileName)
+		
+		
+	def convertTestDataToFeather(self, folderName):
+		actualFolderPath = self.datasetLocation + folderName + Variable.locationSeparator
+		io = InputOutputStream()
+		io.checkAndSaveAsFeather(actualFolderPath, Variable.csvTestFileName, Variable.featherTestFileName)
+		
+		
+	def convertDataToFeather(self, folderName):
+		self.convertTrainDataToFeather(folderName)
+		self.convertTestDataToFeather(folderName)
+			
+	
+	def getStoredModelData(self, filename):	
+		io = InputOutputStream()
+		return io.getStoredModelData(filename)
+		
+		
+	def updateUserMetrics(self, userMetrics):
+		self.userMetrics = userMetrics
+		
+				
+	def getMetrics(self):
+		metrics = CustomMetrics()
+		metricsArray = metrics.getNLPMetrics(self.type)
+		if self.userMetrics != None and self.userMetrics not in metricsArray:	
+			metricsArray.append(self.userMetrics)
+		return metricsArray
+		
+		
+	def normalizeData(self, data):
+		min_max_scaler = StandardScaler()
+		return min_max_scaler.fit_transform(data)
+		
+			
+	def getXYData(self):
+		return np.array(self.trainData), np.array(self.labelData)
+			
+		
+	'''def getDataLimit(self, data_type):
+		if data_type == Variable.TYPE_EXTRAS_TEST:
+			return self.getTestDataLimit()
+		else:
+			return self.getTrainDataLimit()
+			
+					
+	def getTrainDataLimit(self):
+		trainDataLimit = Variable.trainDataLimit
+		if self.wantTrainAllData:
+			trainDataLimit = len(self.getOriPreprocessTrainSentenceArray())
+		return trainDataLimit
+		
+		
+	def getTestDataLimit(self):
+		testDataLimit = Variable.testDataLimit
+		if self.wantTestAllData:
+			testDataLimit = len(self.getOriPreprocessTestSentenceArray())
+		return testDataLimit'''			  	
+		
+		
+	def checkFileExist(self, filename):
+		return InputOutputStream().checkFileExist(filename)
+		 
+		    
+	def createAndWriteAccModel(self, accEntity, fileName = Variable.modelFileName):
+		self.writeAccModel(self.createResultArray(accEntity), fileName)
+			
+			
+	def writeAccModel(self, array, fileName):
+		io = InputOutputStream()
+		io.writeAccModel(array, fileName)
+		
+		
+	def createResultArray(self, accEntity):
+		dataConversion = DataConversion()
+		return dataConversion.createResultArray(accEntity)	
+	
+	
+	def writeModelResult(self, array):
+		io = InputOutputStream()
+		io.writeModelResult(array)
+		
+	def createDLFolder(self, folderPath):
+		dlFolderPath = Variable.allPredictModelFolderName +  Variable.locationSeparator + folderPath
+		self.checkAndCreateDir(dlFolderPath)
+		
+	
+	def checkAndCreateDir(self, folderName):
+		io = InputOutputStream()
+		io.checkAndCreateDir(folderName)	
+		
+		
+	'''def createSubmissionArray(self, subEntity):
+		dataConversion = DataConversion()
+		return dataConversion.createSubmissionArray(subEntity)	'''
+		
+				
+	def getMaxScoreAndValScore(self):
+		io = InputOutputStream()
+		df = io.getStoredModelData(Variable.modelFileName)	
+		if(df.empty):
+			score,val_score = 0,0
+		else:
+			val_score = max(df[Variable.valScoreName])
+			rslt_df = df[df[Variable.valScoreName] == val_score]
+			score = max(rslt_df[Variable.scoreName])
+		return score, val_score
+		
+		
+	def getStoredModelFileNameArray(self, fileName = Variable.modelFileName):
+		io = InputOutputStream()
+		return io.getStoredModelFileNameArray(fileName)
+			
+			
+	def updateStoredModelFileNameArray(self):
+		self.storedModelFileNameArray = self.getStoredModelFileNameArray()
+		
+		
+	def checkAndCreateRelatedDirs(self):
+		io = InputOutputStream()
+		io.checkAndCreateAllDirs()
+		
+		
+	def runModel(self, hyperParameterEntity, hyperParameterTuning):
+		t1 = threading.Thread(target=self.startModelSearch, args = ([hyperParameterEntity, hyperParameterTuning]))
+		t1.start()
+		t1.join()		
+
+
+	#models
+	def startModelSearch(self,hyperParameterEntity, hyperParameterTuning):
+		start = time.time()
+		print (hyperParameterEntity.modelClassName + " Start --------- ")
+		
+		self.createDLFolder(hyperParameterEntity.modelClassName)
+		self.runAllSearch(hyperParameterEntity, hyperParameterTuning)
+		
+		end = time.time()
+		print (hyperParameterEntity.modelClassName + " Finish. In time of seconds = ",int(end-start),"\n\n\n")
+		
+		
+	def runAllSearch(self, hyperParameterEntity, hyperParameterTuning):
+		self.checkAndRunSearch(hyperParameterTuning, hyperParameterEntity, Variable.typeBayes)
+		self.checkAndRunSearch(hyperParameterTuning, hyperParameterEntity, Variable.typeHyperband)
+		self.checkAndRunSearch(hyperParameterTuning, hyperParameterEntity, Variable.typeRandom)
+	
+		
+	def getModelName(self, modelClassName, searchName):
+		return modelClassName + Variable.filenameSeparator + searchName
+		
+		
+	def checkAndRunSearch(self, hyperParameterTuning, hyperParameterEntity, searchType):
+		hyperParameterEntity.modelName = self.getModelName(hyperParameterEntity.modelClassName, searchType)
+		if(hyperParameterEntity.modelName in self.storedModelFileNameArray):
+			return
+		print("\n\n\n\n")
+		print (hyperParameterEntity.modelName + " AND SEARCH TYPE = " + searchType + " Start --------- ")
+		searchFolderPath = hyperParameterEntity.modelClassName + Variable.locationSeparator + searchType
+		self.createDLFolder(searchFolderPath)
+		
+		searchFunc = hyperParameterTuning.startBayesianSearch
+		if searchType == Variable.typeHyperband:
+			searchFunc = hyperParameterTuning.startHyperBandSearch
+		elif searchType == Variable.typeRandom:
+			searchFunc = hyperParameterTuning.startRandomSearch
+			
+		tf.keras.backend.clear_session()
+		t11 = ThreadWithReturnValue(target=searchFunc, args=([hyperParameterEntity, searchFolderPath]))
+		t11.start()
+		self.createAndWriteAccModel(t11.join())
+		print (hyperParameterEntity.modelName + " AND SEARCH TYPE = " + searchType + " FINISHED --------- ")	
+		
+		
+	def getBestModel(self):			
+		io = InputOutputStream()
+		return io.getBestModel()
+		
+		
+	def getAllSavedModelFileName(self):			
+		io = InputOutputStream()
+		return io.getAllSavedModel()	
+		
+		
+	def getLoadedModel(self, modelFileName):			
+		io = InputOutputStream()
+		return io.getLoadedModel(modelFileName)	
+		
+		
+	def isModelPresent(self):			
+		io = InputOutputStream()
+		return io.isModelPresent()
+		
+		
+	def getFullModelName(self, modelFileName):
+		return modelFileName.split(Variable.locationSeparator)[-1]
+			
+		
+	def processAndSetTestData(self):
+		self.setAllTestData()
+		if(self.getOriPreprocessTestSentenceArray() == []):
+			if(self.getOriPreprocessTrainSentenceArray() == []):
+				self.setOriPreprocessTestSentenceArray(self.getOriTrainData())
+			else:
+				self.setOriPreprocessTestSentenceArray(self.getOriPreprocessTrainSentenceArray()[:self.getTestDataLimit()])
+
+		
+	def showEli5(self, model, X_test, columns):
+		#Return an explanation of estimator parameters (weights).
+		eli5.explain_weights(model)
+		#Return an explanation of an estimator prediction.
+		eli5.explain_prediction(model, X_test)
+		#Return an explanation of estimator parameters (weights) as an IPython.display.HTML object. Use this function to show classifier weights in IPython.
+		eli5.show_weights(model)
+		#Return an explanation of estimator prediction as an IPython.display.HTML object. Use this function to show information about classifier prediction in IPython.
+		eli5.show_prediction(model, X_test, feature_names=columns, show_feature_values=True)
+		
+		
+	'''@TODO FOR NOW WE WILL COMMENT BECAUSE IT TRAINS ITS OWN MODEL NOT USING OUR MODEL 
+	def showEbm(self, X, Y):
+		X_train,X_val,Y_train,Y_val = self.getSplittedData(X, Y)
+		
+		############## create EBM model #############
+		ebm = ExplainableBoostingClassifier()
+		ebm.fit(X_train, Y_train)
+		
+		############## visualizations #############
+		# Generate global explanability visuals
+		global_exp=ebm.explain_global()
+		show(global_exp)
+		
+		# Generate local explanability visuals
+		ebm_local = ebm.explain_local(X, Y)
+		show(ebm_local)
+		
+		# Generate EDA visuals 
+		hist = ClassHistogram().explain_data(X_train, y_train, name = 'Train Data')
+		show(hist)
+		
+		# Package it all in one Dashboard , see image below
+		show([hist, ebm_local, ebm_perf,global_exp], share_tables=True)'''
+			
+
+	def showDalex(self, model, X, Y, X_test):
+		explainer = dx.Explainer(model, X, Y) # create explainer from Dalex
+		############## visualizations #############
+		# Generate importance plot showing top 30
+		explainer.model_parts().plot(max_vars=30)
+		# Generate ROC curve for xgboost model object
+		print(self.type.lower())
+		explainer.model_performance(model_type=self.type.lower()).plot(geom='roc')
+		train = X[79]
+		# Generate breakdown plot
+		explainer.predict_parts(train).plot(max_vars=15)
+		# Generate SHAP plot 
+		explainer.predict_parts(train,type="shap").plot(min_max=[0,1],max_vars=15)
+		# Generate breakdown interactions plot 
+		explainer.predict_parts(train, type='break_down_interactions').plot(max_vars=20)
+		# Generate residual plots
+		explainer.model_performance(model_type = self.type.lower()).plot()
+		# Generate PDP plots for all variables 
+		explainer.model_profile(type = 'partial', label="pdp").plot()
+		# Generate Accumulated Local Effects plots for all variables 
+		explainer.model_profile(type = 'ale', label="pdp").plot()
+		# Generate Individual Conditional Expectation plots for worst texture variable 
+		#explainer.model_profile(type = 'conditional', label="conditional",variables="worst texture")
+		# Generate lime breakdown plot
+		explainer.predict_surrogate(train).plot()
+		
+		####### start Arena dashboard #############
+		# create empty Arena
+		arena=dx.Arena()
+		# push created explainer
+		arena.push_model(explainer)
+		# push whole test dataset (including target column)
+		arena.push_observations(pd.DataFrame(X_test))
+		# run server on port 9294
+		arena.run_server(port=9291)
+	
+	
+	def showExplainerDashboard(self, model, X, Y, fileName, columns):
+		# Create the explainer object
+		X = pd.DataFrame(X, columns = columns)
+		Y = pd.DataFrame(Y)
+		if self.type == Variable.typeRegress:
+ 			explainer = RegressionExplainer(model, X, Y, model_output='logodds')
+		else:
+			explainer = ClassifierExplainer(model, X, Y, model_output='logodds')
+				
+		# Create individual component plants using Inexplainer
+		ie = InlineExplainer(explainer)
+		# SHAP overview
+		ie.shap.overview()
+		# Generate Decision plot 
+		# SHAP interactions
+		ie.shap.interaction_dependence()
+		# Model Stats
+		ie.classifier.model_stats()
+		# SHAP contribution
+		ie.shap.contributions_graph()
+		# SHAP dependence
+		ie.shap.dependence()
+		db = ExplainerDashboard(explainer, 
+                        title=fileName, # defaults to "Model Explainer"
+                        shap_interaction=False, # you can switch off tabs with bools
+                        )
+		db.run(port = 8805)
+
+
+	def showShapash(self, model, X, Y, X_test, fileName):
+		# create explainer
+		xpl = SmartExplainer()
+		xpl.compile(x=pd.DataFrame(X_test),model=model)
+		#Creating Application
+		app = xpl.run_app(title_story = fileName)
+		
+		############## visualizations #############
+		# feature importance based on SHAP
+		xpl.plot.features_importance()
+		# contributions plot
+		#xpl.plot.contribution_plot("worst concave points")
+		# Local explanation
+		xpl.plot.local_plot(index=79)
+		# compare plot 
+		xpl.plot.compare_plot(index=[X_test.index[79], X_test.index[80]])
+		# Interactive interactions widget 
+		xpl.plot.top_interactions_plot(nb_top_interactions=5)
+		# save contributions
+		predictor = xpl.to_smartpredictor()
+		predictor.add_input(x=X, ypred=Y)
+		detailed_contributions = predictor.detail_contributions()
+		print(detailed_contributions)
+		
+		
+	def showLime(self, model, X, X_test, columns):
+		#X_test.columns
+		############## create explainer ###########
+		# we use the dataframes splits created above for SHAP
+		explainer = lime.lime_tabular.LimeTabularExplainer(X_test, feature_names=columns, verbose=True)	
+		############## visualizations #############
+		exp = explainer.explain_instance(X[79], model.predict_proba, num_features=len(columns))
+		exp.show_in_notebook(show_table=True)	
+	
+	
+	def showSHAP(self, model, X, columns):
+		# Generate the Tree explainer and SHAP values
+		#model =  model.best_estimator_
+		#explainer = shap.TreeExplainer(model)
+		explainer = shap.KernelExplainer(model.predict, X)
+		shap_values = explainer.shap_values(X)
+		expected_value = explainer.expected_value
+		############## visualizations #############
+		# Generate summary dot plot
+		shap.summary_plot(shap_values, X, title="SHAP summary plot") 
+		# Generate summary bar plot 
+		shap.summary_plot(shap_values, X,plot_type="bar") 
+		# Generate waterfall plot  
+		shap.plots._waterfall.waterfall_legacy(expected_value, shap_values[79], features=X.loc[79,:], feature_names=columns, max_display=15, show=True)
+		# Generate dependence plot
+		#shap.dependence_plot("worst concave points", shap_values, X, interaction_index="mean concave points")
+		# Generate multiple dependence plots
+		for name in X_train.columns:
+		     shap.dependence_plot(name, shap_values, X)
+		#shap.dependence_plot("worst concave points", shap_values, X, interaction_index="mean concave points")
+		# Generate force plot - Multiple rows 
+		shap.force_plot(explainer.expected_value, shap_values[:100,:], X[:100,:])
+		# Generate force plot - Single
+		shap.force_plot(explainer.expected_value, shap_values[0,:], X[0,:])
+		# Generate Decision plot 
+		shap.decision_plot(expected_value, shap_values[79],link='logit' ,features=X[79,:], 
+                   feature_names=(columns),show=True,title="Decision Plot")
+
+			
+	def runExplainableAI(self, model, X, Y, X_test, fileName, columns):
+    		#columns = list(X.columns)
+    		print(columns)
+    		#1. ELI5
+    		print("\n ELI5 STARTED ------- \n")
+    		#self.showEli5(model, X_test, columns)
+    		print("\n ELI5 FINISHED ------- \n")
+    		
+    		#2. Explainable Boosting Machines (EBM)
+    		print("\n Explainable Boosting Machines (EBM) STARTED ------- \n")
+    		#self.showEbm()	#TODO CREATE NEW MODEL WITHOUT USING TRAINED MODEL
+    		print("\n Explainable Boosting Machines (EBM) FINISHED ------- \n")
+    		
+    		#3. Dalex
+    		print("\n Dalex STARTED ------- \n")
+    		#self.showDalex(model, X, Y, X_test)
+    		print("\n Dalex FINISHED ------- \n")
+    		
+    		#4. ExplainerDashboard
+    		print("\n ExplainerDashboard STARTED ------- \n")
+    		#self.showExplainerDashboard(model, X, Y, fileName, columns)
+    		print("\n ExplainerDashboard FINISHED ------- \n")
+    		
+    		#5. Shapash
+    		print("\n SHAPASH STARTED ------- \n")
+    		self.showShapash(model, X, Y, X_test, fileName)	#TODO THROWING ERROR ValueError: model not supported by shapash, please compute contributions by yourself before using shapash
+    		print("\n SHAPASH FINISHED ------- \n")
+    		
+    		#6. Lime
+    		print("\n LIME STARTED ------- \n")
+    		#self.showLime(model, X, X_test, columns)
+    		print("\n LIME FINISHED ------- \n")
+    		
+    		#7. SHAP
+    		print("\n SHAP STARTED ------- \n")
+    		#self.showSHAP(model, X, columns )
+    		print("\n SHAP FINISHED ------- \n")
+    		
+		
+	def startPredict(self, subEntity = None, predictLabelDict = None):
+		X_test = self.testData
+		
+		#model = self.getBestModel()
+		#model.summary()
+
+		#pred = predict(X_test, model)
+		
+		self.runExplainableAI(model, self.X, self.Y, X_test, self.folderName, self.getTrainColumns(train, labelName))
+		
+		pred = self.predictAllModel(X_test)
+		
+		if(subEntity != None):
+			if predictLabelDict != None:
+				pred = [predictLabelDict[value] for value in pred]	
+			subEntity.predictions = pred
+			self.submitPredictions(subEntity)
+		else:	
+			return pred[0]	
+		
+		
+	def predictAllModel(self, X_test):
+		storedPredictNameArray = self.getStoredModelFileNameArray(Variable.predictFileName)
+		
+		for modelFileName in self.getAllSavedModelFileName():
+			fullModelName = self.getFullModelName(modelFileName)
+			
+			if(fullModelName in storedPredictNameArray):
+				continue
+			
+			print("\n\n" + fullModelName + " _ _    PREDICT THE DATA")
+			
+			model = self.getLoadedModel(modelFileName)
+			model.summary()
+			
+			self.predict(X_test, model)
+			self.savePredictFileName(fullModelName)
+		return []	
+			
+				
+	def predict(self, X_test, model):
+		print("\n\nPREDICT THE DATA")
+		print("\nTEST SET SIZE = ",len(X_test),"\n")
+		predictor = ktrain.get_predictor(model)
+		predictor.explain(X_test)
+		return model.predict(X_test)
+		
+		
+	def savePredictFileName(self, fullModelName):
+		self.createAndWriteAccModel(AccuracyEntity(fullModelName), Variable.predictFileName)
+			
+			
+	def createSubmissionArray(self, subEntity):
+		dataConversion = DataConversion()
+		return dataConversion.createSubmissionArray(subEntity)	
+				
+			
+	def submitPredictions(self, subEntity):
+		io = InputOutputStream()
+		array = self.createSubmissionArray(subEntity)
+		io.write_csv(self.getSubmissionFileName(subEntity.fileName), array, subEntity.fields)	
+		
+	
+	def getSubmissionFileName(self, fileName):
+		if fileName == None:
+			return Variable.submissionFileName
+		else:
+			return fileName
+		
+		
+	def evaluateAndUpdateNLPModel(self):
+		X, Y = self.getXYData()
+		X_train,X_val,Y_train,Y_val = self.getSplittedData(X, Y)
+		for modelFileName in self.getAllSavedModelFileName():
+			t11 = ThreadWithReturnValue(target=self.evaluateModelAndUpdateScore, args=([modelFileName, X_train, X_val, Y_train, Y_val]))
+			t11.start()
+			t11.join()
+			
+	
+	def evaluateModelAndUpdateScore(self, modelFileName, X_train,X_val,Y_train,Y_val):
+		start = time.time()
+		print (modelFileName + " Start Evaluation --------- ")
+		
+		model = self.getLoadedModel(modelFileName)
+		model.compile(optimizer="adam")
+		t11 = ThreadWithReturnValue(target=self.evaluateModel, args=(model, X_train, Y_train))
+		t12 = ThreadWithReturnValue(target=self.evaluateModel, args=(model, X_val, Y_val))
+		t11.start()
+		t12.start()
+		score = t11.join()
+		val_score = t12.join()
+		print(score)
+		
+		end = time.time()
+		print (modelFileName + " Finish Evaluation. In time of seconds = ",int(end-start),"\n\n\n")	
+		
+		
+	def getSplittedData(self, X, Y):
+		#TRAIN TEST SPLIT DATASET
+		return train_test_split(X, Y, train_size=0.90,random_state=1)	
+			
+					
+	def evaluateModel(self, model, X, Y):
+		return model.evaluate(X, Y)			

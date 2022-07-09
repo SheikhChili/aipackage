@@ -1,0 +1,43 @@
+class HyperParamEntity():
+
+	def __init__(self, X_train=[], Y_train=[], X_val=[], Y_val=[], algname = {}, cv=None, scoring="", model_type=""):
+		self.X_train = X_train
+		self.Y_train = Y_train
+		self.X_val = X_val
+		self.Y_val = Y_val
+		self.scoring = scoring
+		self.cv = cv
+		self.model_type = model_type
+		self.algname = algname
+		
+class ClasRegModelEnitity():
+	def __init__(self, alg, grid, modelname):
+		self.alg = alg
+		self.grid = grid
+		self.modelname = modelname
+		
+class MultiClasModelEnitity():
+	def __init__(self, alg, grid, modelname, genegrid, genealg):
+		self.alg = alg
+		self.grid = grid
+		self.modelname = modelname
+		self.genegrid = genegrid
+		self.genealg = genealg		
+			
+		
+class AccuracyEntity():
+	
+	def __init__(self, filename, score, val_score, param):
+		self.filename = filename
+		self.score = score
+		self.val_score = val_score
+		self.param = param
+		
+		
+class SubmissionEntity():
+	def __init__(self, predictions = [], id_ = [], id_2 = [], id_3 = [], fields=[]):
+		self.predictions = predictions
+		self.id_ = id_
+		self.id_2 = id_2
+		self.id_3 = id_3
+		self.fields = fields
