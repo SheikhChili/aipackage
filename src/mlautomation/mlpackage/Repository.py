@@ -2,7 +2,7 @@
 import threading
 import time
 
-import dalex as dx
+#import dalex as dx
 # EDA
 import dtale
 import eli5
@@ -389,10 +389,10 @@ class Repository:
         # self.showAutoViz(df, fileName, labelName)
         print("\n AUTOVIZ FINISHED ------- \n")
 
-        # 8. K L I B E
+        ''''# 8. K L I B E
         print("\n KLIBE STARTED ------- \n")
         self.show_klib(df)  # As of now , we will comment this because this is not useful
-        print("\n KLIBE FINISHED ------- \n")
+        print("\n KLIBE FINISHED ------- \n")'''
 
     @staticmethod
     def show_eli5(model, x_test, columns):
