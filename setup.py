@@ -12,8 +12,8 @@ setup(
     keywords='ML Automation',
     install_requires=[
         'scikit-learn', 'xgboost', 'catboost', 'lightgbm', 'numpy', 'pandas', 'tensorflow', 'imblearn', 'optuna',
-        'tpot', 'hyperopt', 'yellowbrick', 'sys', 'time', 'threading', 'csv', 'pickle', 'os', 'librosa', 'math',
-        'keras_tuner', 'json', 're', 'spacy', 'unidecode', 'bs4', 'random', 'warnings', 'dtale', 'lime', 'matplotlib',
+        'tpot', 'hyperopt', 'yellowbrick',  'csv', 'pickle',  'librosa',
+        'keras_tuner', 'json',  'spacy', 'unidecode', 'bs4',  'dtale', 'lime', 'matplotlib',
         'shap', 'sweetviz', 'aix360', 'explainerdashboard', 'pandas_profiling', 'pandas_visual_analysis'
     ],
 

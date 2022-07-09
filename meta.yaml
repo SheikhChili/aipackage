@@ -1,0 +1,59 @@
+
+package:
+  name: "ai-automation"
+  version: "1.0"
+
+source:
+  git_rev: v1.0
+  git_url: https://github.com/SheikhChili/aipackage
+channels:
+  - conda-forge
+  - defaults
+requirements:
+  host:
+    - python
+    - setuptools
+  build:
+    - python
+  run:
+    - python
+    - scikit-learn
+    - xgboost
+    - catboost
+    - lightgbm
+    - numpy
+    - pandas
+    - tensorflow
+    - imblearn
+    - optuna
+    - tpot
+    - hyperopt
+    - yellowbrick
+    - csv
+    - pickle
+    - librosa
+    - keras_tuner
+    - spacy
+    - unidecode
+    - bs4
+    - dtale
+    - lime
+    - matplotlib
+    - shap
+    - sweetviz
+    - aix360
+    - explainerdashboard
+    - pandas_profiling
+    - pandas_visual_analysis
+
+about:
+  home: https://github.com/SheikhChili/aipackage
+  license: MIT
+  license_familY: MIT
+  license_file: LICENSE
+  summary: "Used to automate the ML and DL"
+
+extra:
+  recipe-maintainers:
+    - SheikhChili
+
