@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='mlautomation',
+    name='ml-automation',
     version='1.0',
     license='MIT',
     author="SheikhChili",
-    author_email='email@example.com',
+    author_email='sparrow.shreyas@gmail.com',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     url='https://github.com/SheikhChili/aipackage',
