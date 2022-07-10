@@ -7,8 +7,6 @@ ai_automation.egg-info/dependency_links.txt
 ai_automation.egg-info/requires.txt
 ai_automation.egg-info/top_level.txt
 aiautomation/customThreading.py
-aiautomation/classification/ClassificationModel.py
-aiautomation/classification/ClassificationRepository.py
 aiautomation/mlpackage/CustomMetrics.py
 aiautomation/mlpackage/DataConversion.py
 aiautomation/mlpackage/Entities.py
@@ -16,9 +14,11 @@ aiautomation/mlpackage/HyperparameterTuning.py
 aiautomation/mlpackage/PackageVariable.py
 aiautomation/mlpackage/Repository.py
 aiautomation/mlpackage/StoreData.py
-aiautomation/multiclassification/MultiClassModel.py
-aiautomation/multiclassification/MultiClassRepository.py
-aiautomation/regression/RegressionModel.py
-aiautomation/regression/RegressionRepository.py
-aiautomation/segmentation/SegmentationModel.py
-aiautomation/segmentation/SegmentationRepository.py
+aiautomation/mlpackage/classification/ClassificationModel.py
+aiautomation/mlpackage/classification/ClassificationRepository.py
+aiautomation/mlpackage/multiclassification/MultiClassModel.py
+aiautomation/mlpackage/multiclassification/MultiClassRepository.py
+aiautomation/mlpackage/regression/RegressionModel.py
+aiautomation/mlpackage/regression/RegressionRepository.py
+aiautomation/mlpackage/segmentation/SegmentationModel.py
+aiautomation/mlpackage/segmentation/SegmentationRepository.py

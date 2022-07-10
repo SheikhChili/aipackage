@@ -2,12 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name='ai_automation',
-    version='2.0',
+    version='2.1.0',
     license='MIT',
     author="SheikhChili",
     author_email='sparrow.shreyas@gmail.com',
-    packages=['aiautomation', 'aiautomation/classification', 'aiautomation/mlpackage',
-              'aiautomation/multiclassification', 'aiautomation/regression', 'aiautomation/segmentation'],
+    packages=['aiautomation', 'aiautomation/mlpackage/classification', 'aiautomation/mlpackage',
+              'aiautomation/mlpackage/multiclassification', 'aiautomation/mlpackage/regression',
+              'aiautomation/mlpackage/segmentation'],
     # package_dir={'': 'src'},
     url='https://github.com/SheikhChili/aipackage',
     keywords='AI Automation',
