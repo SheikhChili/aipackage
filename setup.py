@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ai-automation',
-    version='1.0',
+    version='2.1.2',
     license='MIT',
     author="SheikhChili",
     author_email='sparrow.shreyas@gmail.com',
@@ -12,9 +12,9 @@ setup(
     keywords='ML Automation',
     install_requires=[
         'scikit-learn', 'xgboost', 'catboost', 'lightgbm', 'numpy', 'pandas', 'tensorflow', 'imblearn', 'optuna',
-        'tpot', 'hyperopt', 'yellowbrick',  'csv', 'pickle',  'librosa',
-        'keras_tuner', 'json',  'spacy', 'unidecode', 'bs4',  'dtale', 'lime', 'matplotlib',
-        'shap', 'sweetviz', 'aix360', 'explainerdashboard', 'pandas_profiling', 'pandas_visual_analysis'
+        'tpot', 'hyperopt', 'yellowbrick', 'librosa', 'keras_tuner', 'spacy', 'unidecode', 'bs4', 'dtale',
+        'lime', 'matplotlib', 'shap', 'sweetviz', 'aix360', 'explainerdashboard', 'pandas_profiling',
+        'pandas_visual_analysis'
     ],
 
 )
