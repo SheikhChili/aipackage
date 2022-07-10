@@ -29,8 +29,6 @@ requirements:
     - tpot
     - hyperopt
     - yellowbrick
-    - csv
-    - pickle
     - librosa
     - keras_tuner
     - spacy
