@@ -1,6 +1,6 @@
 # IMPORT
 import lightgbm as lgb
-from aiautomation.mlpackage.Entities import ClasRegModelEnitity
+from aiautomation.mlpackage.Entities import ClasRegModelEntity
 from aiautomation.mlpackage.PackageVariable import Variable
 from catboost import CatBoostClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
@@ -32,7 +32,7 @@ class Models:
         # define grid search
         grid = dict(solver=solvers, penalty=penalty, C=c_values)
 
-        clas_reg_model_entity = ClasRegModelEnitity(logistic_reg, grid, Variable.typeLogReg)
+        clas_reg_model_entity = ClasRegModelEntity(logistic_reg, grid, Variable.typeLogReg)
         self.alg_name[logistic_reg] = 'sklearn.linear_model.LogisticRegression'
 
         return clas_reg_model_entity
@@ -49,7 +49,7 @@ class Models:
         # define grid search
         grid = dict(alpha=alpha)
 
-        clas_reg_model_entity = ClasRegModelEnitity(rid_clas, grid, Variable.typeRidge)
+        clas_reg_model_entity = ClasRegModelEntity(rid_clas, grid, Variable.typeRidge)
         self.alg_name[rid_clas] = 'sklearn.linear_model.RidgeClassifier'
 
         return clas_reg_model_entity
@@ -68,7 +68,7 @@ class Models:
         # define grid search
         grid = dict(n_neighbors=n_neighbors, weights=weights, metric=metric)
 
-        clas_reg_model_entity = ClasRegModelEnitity(knn, grid, Variable.typeKnn)
+        clas_reg_model_entity = ClasRegModelEntity(knn, grid, Variable.typeKnn)
         self.alg_name[knn] = 'sklearn.neighbors.KNeighborsClassifier'
 
         return clas_reg_model_entity
@@ -87,7 +87,7 @@ class Models:
         # define grid search
         grid = dict(kernel=kernel, C=c, gamma=gamma)
 
-        clas_reg_model_entity = ClasRegModelEnitity(svc_classifier, grid, Variable.typeSvc)
+        clas_reg_model_entity = ClasRegModelEntity(svc_classifier, grid, Variable.typeSvc)
         self.alg_name[svc_classifier] = 'sklearn.svm.SVC'
 
         return clas_reg_model_entity
@@ -108,7 +108,7 @@ class Models:
         grid = dict(max_depth=max_depth, max_features=max_features, min_samples_leaf=min_sample_leaf,
                     criterion=criterion)
 
-        clas_reg_model_entity = ClasRegModelEnitity(des_tree_classifier, grid, Variable.typeDesTree)
+        clas_reg_model_entity = ClasRegModelEntity(des_tree_classifier, grid, Variable.typeDesTree)
         self.alg_name[des_tree_classifier] = 'sklearn.tree.DecisionTreeClassifier'
 
         return clas_reg_model_entity
@@ -126,7 +126,7 @@ class Models:
         # define grid search
         grid = dict(n_estimators=n_estimators, max_features=max_features)
 
-        clas_reg_model_entity = ClasRegModelEnitity(ran_for_classifier, grid, Variable.typeRanFor)
+        clas_reg_model_entity = ClasRegModelEntity(ran_for_classifier, grid, Variable.typeRanFor)
         self.alg_name[ran_for_classifier] = 'sklearn.ensemble.RandomForestClassifier'
 
         return clas_reg_model_entity
@@ -141,7 +141,7 @@ class Models:
         # define grid search
         grid = dict(var_smoothing=var_smoothing)
 
-        clas_reg_model_entity = ClasRegModelEnitity(gaussian_nb, grid, Variable.typeGaussianNB)
+        clas_reg_model_entity = ClasRegModelEntity(gaussian_nb, grid, Variable.typeGaussianNB)
         self.alg_name[gaussian_nb] = 'sklearn.naive_bayes.GaussianNB'
         return clas_reg_model_entity
 
@@ -156,7 +156,7 @@ class Models:
         # define grid search
         grid = dict(alpha=alpha, fit_prior=fit_prior)
 
-        clas_reg_model_entity = ClasRegModelEnitity(bernoulli_nb, grid, Variable.typeBerNB)
+        clas_reg_model_entity = ClasRegModelEntity(bernoulli_nb, grid, Variable.typeBerNB)
         self.alg_name[bernoulli_nb] = 'sklearn.naive_bayes.BernoulliNB'
 
         return clas_reg_model_entity
@@ -176,7 +176,7 @@ class Models:
         # define grid search
         grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, subsample=subsample, max_depth=max_depth)
 
-        clas_reg_model_entity = ClasRegModelEnitity(gra_boost_class, grid, Variable.typeGradBoost)
+        clas_reg_model_entity = ClasRegModelEntity(gra_boost_class, grid, Variable.typeGradBoost)
         self.alg_name[gra_boost_class] = 'sklearn.ensemble.GradientBoostingClassifier'
 
         return clas_reg_model_entity
@@ -202,7 +202,7 @@ class Models:
         # define grid search
         grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, algorithm=algorithm)
 
-        clas_reg_model_entity = ClasRegModelEnitity(ada_boost_class, grid, Variable.typeAdaBoost)
+        clas_reg_model_entity = ClasRegModelEntity(ada_boost_class, grid, Variable.typeAdaBoost)
         self.alg_name[ada_boost_class] = 'sklearn.ensemble.AdaBoostClassifier'
 
         return clas_reg_model_entity
@@ -228,7 +228,7 @@ class Models:
                     min_child_weight=min_child_weight, gamma=gamma, colsample_bytree=col_sample_by_tree,
                     reg_alpha=reg_alpha)
 
-        clas_reg_model_entity = ClasRegModelEnitity(xgb_model, grid, Variable.typeXgb)
+        clas_reg_model_entity = ClasRegModelEntity(xgb_model, grid, Variable.typeXgb)
         self.alg_name[xgb_model] = 'xgboost.XGBClassifier'
 
         return clas_reg_model_entity
@@ -250,7 +250,7 @@ class Models:
         grid = dict(learning_rate=learning_rate, num_leaves=num_leaves, max_bin=max_bin, max_depth=max_depth,
                     objective=objective)
 
-        clas_reg_model_entity = ClasRegModelEnitity(light_gbm, grid, Variable.typeLGBM)
+        clas_reg_model_entity = ClasRegModelEntity(light_gbm, grid, Variable.typeLGBM)
         self.alg_name[light_gbm] = 'lgb.LGBMClassifier'
 
         return clas_reg_model_entity
@@ -275,7 +275,7 @@ class Models:
         grid = dict(learning_rate=learning_rate, depth=depth, iterations=iterations, l2_leaf_reg=l2_leaf_reg,
                     border_count=border_count, ctr_border_count=ctr_border_count, thread_count=thread_count)
 
-        clas_reg_model_entity = ClasRegModelEnitity(cat_boost, grid, Variable.typeCGBM)
+        clas_reg_model_entity = ClasRegModelEntity(cat_boost, grid, Variable.typeCGBM)
         # self.alg_name[catboost] = 'catboost.CatBoostClassifier'
 
         return clas_reg_model_entity

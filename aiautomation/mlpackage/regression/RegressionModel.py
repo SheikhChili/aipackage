@@ -4,7 +4,7 @@ import lightgbm as lgb
 from sklearn.svm import SVR
 from xgboost import XGBRegressor
 from catboost import CatBoostRegressor
-from aiautomation.mlpackage.Entities import ClasRegModelEnitity
+from aiautomation.mlpackage.Entities import ClasRegModelEntity
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from aiautomation.mlpackage.PackageVariable import Variable
@@ -29,7 +29,7 @@ class Models:
         # define grid search
         grid = dict(fit_intercept=fit_intercept, copy_X=copy_x)
 
-        clas_reg_model_entity = ClasRegModelEnitity(linreg, grid, Variable.typeLinReg)
+        clas_reg_model_entity = ClasRegModelEntity(linreg, grid, Variable.typeLinReg)
         self.alg_name[linreg] = 'sklearn.linear_model.LinearRegression'
 
         return clas_reg_model_entity
@@ -47,7 +47,7 @@ class Models:
         # define grid search
         grid = dict(alpha=alpha, solver=solver, fit_intercept=fit_intercept)
 
-        clas_reg_model_entity = ClasRegModelEnitity(rid_reg, grid, Variable.typeRidge)
+        clas_reg_model_entity = ClasRegModelEntity(rid_reg, grid, Variable.typeRidge)
         self.alg_name[rid_reg] = 'sklearn.linear_model.Ridge'
 
         return clas_reg_model_entity
@@ -64,7 +64,7 @@ class Models:
         # define grid search
         grid = dict(n_neighbors=n_neighbors, weights=weights, metric=metric)
 
-        clas_reg_model_entity = ClasRegModelEnitity(knn, grid, Variable.typeKnn)
+        clas_reg_model_entity = ClasRegModelEntity(knn, grid, Variable.typeKnn)
         self.alg_name[knn] = 'sklearn.neighbors.KNeighborsRegressor'
 
         return clas_reg_model_entity
@@ -82,7 +82,7 @@ class Models:
         # define grid search
         grid = dict(kernel=kernel, gamma=gamma, C=c)
 
-        clas_reg_model_entity = ClasRegModelEnitity(svr, grid, Variable.typeSvc)
+        clas_reg_model_entity = ClasRegModelEntity(svr, grid, Variable.typeSvc)
         self.alg_name[svr] = 'sklearn.svm.SVR'
 
         return clas_reg_model_entity
@@ -106,7 +106,7 @@ class Models:
                     min_samples_leaf=min_samples_leaf,
                     max_leaf_nodes=max_leaf_nodes, min_samples_split=min_samples_split)
 
-        clas_reg_model_entity = ClasRegModelEnitity(des_tree_reg, grid, Variable.typeDesTree)
+        clas_reg_model_entity = ClasRegModelEntity(des_tree_reg, grid, Variable.typeDesTree)
         self.alg_name[des_tree_reg] = 'sklearn.tree.DecisionTreeRegressor'
 
         return clas_reg_model_entity
@@ -129,7 +129,7 @@ class Models:
                     min_samples_split=min_samples_split,
                     min_samples_leaf=min_samples_leaf, criterion=criterion)
 
-        clas_reg_model_entity = ClasRegModelEnitity(ran_for_reg, grid, Variable.typeRanFor)
+        clas_reg_model_entity = ClasRegModelEntity(ran_for_reg, grid, Variable.typeRanFor)
         self.alg_name[ran_for_reg] = 'sklearn.ensemble.RandomForestRegressor'
 
         return clas_reg_model_entity
@@ -153,7 +153,7 @@ class Models:
                     subsample=subsample,
                     max_features=max_features, max_depth=max_depth)
 
-        clas_reg_model_entity = ClasRegModelEnitity(gra_boost_reg, grid, Variable.typeGradBoost)
+        clas_reg_model_entity = ClasRegModelEntity(gra_boost_reg, grid, Variable.typeGradBoost)
         self.alg_name[gra_boost_reg] = 'sklearn.ensemble.GradientBoostingRegressor'
 
         return clas_reg_model_entity
@@ -179,7 +179,7 @@ class Models:
         # define grid search
         grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, loss=loss)
 
-        clas_reg_model_entity = ClasRegModelEnitity(ada_boost_reg, grid, Variable.typeAdaBoost)
+        clas_reg_model_entity = ClasRegModelEntity(ada_boost_reg, grid, Variable.typeAdaBoost)
         self.alg_name[ada_boost_reg] = 'sklearn.ensemble.AdaBoostRegressor'
 
         return clas_reg_model_entity
@@ -203,7 +203,7 @@ class Models:
                     min_child_weight=min_child_weight, gamma=gamma, colsample_bytree=col_sample_by_tree,
                     reg_alpha=reg_alpha)
 
-        clas_reg_model_entity = ClasRegModelEnitity(xgb_model, grid, Variable.typeXgb)
+        clas_reg_model_entity = ClasRegModelEntity(xgb_model, grid, Variable.typeXgb)
         self.alg_name[xgb_model] = 'xgboost.XGBRegressor'
 
         return clas_reg_model_entity
@@ -221,7 +221,7 @@ class Models:
         # define grid search
         grid = dict(num_leaves=num_leaves, learning_rate=learning_rate, max_depth=max_depth, max_bin=max_bin)
 
-        clas_reg_model_entity = ClasRegModelEnitity(lightgbm, grid, Variable.typeLGBM)
+        clas_reg_model_entity = ClasRegModelEntity(lightgbm, grid, Variable.typeLGBM)
         self.alg_name[lightgbm] = 'lgb.LGBMRegressor'
 
         return clas_reg_model_entity
@@ -244,7 +244,7 @@ class Models:
         grid = dict(depth=depth, iterations=iterations, learning_rate=learning_rate, l2_leaf_reg=l2_leaf_reg,
                     border_count=border_count, ctr_border_count=ctr_border_count, thread_count=thread_count)
 
-        clas_reg_model_entity = ClasRegModelEnitity(catboost, grid, Variable.typeCGBM)
+        clas_reg_model_entity = ClasRegModelEntity(catboost, grid, Variable.typeCGBM)
         # self.alg_name[catboost] = 'catboost.CatBoostRegressor'
 
         return clas_reg_model_entity
