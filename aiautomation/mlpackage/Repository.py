@@ -287,8 +287,8 @@ class Repository:
         # WILL WORK IN JUPYTER HERE NO VISUALIZATION
         av = AutoViz_Class()
         sep = ","
-        autoviz_dir = Variable.edaLocation + Variable.locationSeparator + fileName + Variable.autoviz + Variable\
-            .htmlExtension
+        autoviz_dir = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + fileName + \
+                      Variable.autoviz + Variable.htmlExtension
         dft = av.AutoViz('', sep, label_name, df, chart_format="html", save_plot_dir=autoviz_dir)
         print("\n")
         '''    sep, which is the separator by which data is separated, by default it is ‘,’.
@@ -302,15 +302,15 @@ class Repository:
     def show_pandas_profiling(df, file_name):
         profile = ProfileReport(df, title=file_name, explorative=True)
         profile.to_widgets()
-        html_filename = Variable.edaLocation + Variable.locationSeparator + file_name + Variable.pandasProfiling \
-                        + Variable.htmlExtension
+        html_filename = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + file_name + \
+                        Variable.pandasProfiling + Variable.htmlExtension
         profile.to_file(html_filename)
 
     @staticmethod
     def show_sweetviz(df, file_name):
         report = sv.analyze(df)
-        html_filename = Variable.edaLocation + Variable.locationSeparator + file_name + Variable.sweetviz \
-                        + Variable.htmlExtension
+        html_filename = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + file_name + \
+                        Variable.sweetviz + Variable.htmlExtension
         report.show_html(html_filename, open_browser=False)
 
     # As of now , we will comment this because this is not useful
@@ -348,7 +348,7 @@ class Repository:
     @staticmethod
     def show_data_prep(df, file_name):
         report = create_report(df, title=file_name)
-        report.save(filename=Variable.dataPrep, to=Variable.edaLocation)
+        report.save(filename=Variable.dataPrep, to=self.io.storeDataDirName + Variable.edaLocation)
 
     def run_eda(self, file_name, label_name, df):
         if df.empty:
