@@ -1,5 +1,5 @@
 # IMPORT
-from aipackage.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.PackageVariable import Variable
 from sklearn.metrics import precision_score, make_scorer, accuracy_score, auc, f1_score, jaccard_score, recall_score, \
     roc_auc_score, mean_absolute_error, mean_squared_error, mean_squared_log_error, mean_absolute_percentage_error, \
     r2_score, calinski_harabasz_score, davies_bouldin_score, completeness_score, fowlkes_mallows_score, \

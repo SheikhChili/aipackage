@@ -5,8 +5,8 @@ from sklearn.cluster import KMeans
 from sklearn.cluster import MiniBatchKMeans
 from sklearn.cluster import SpectralClustering
 from sklearn.mixture import GaussianMixture
-from aipackage.mlpackage.Entities import ClasRegModelEnitity
-from aipackage.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.Entities import ClasRegModelEnitity
+from aiautomation.mlpackage.PackageVariable import Variable
 
 
 class Models:

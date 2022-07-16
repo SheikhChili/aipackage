@@ -1,12 +1,12 @@
 # IMPORT
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from aipackage.mlpackage.Repository import Repository
-from aipackage.mlpackage.PackageVariable import Variable
-from aipackage.mlpackage.Entities import HyperParamEntity
-from aipackage.segmentation.SegmentationModel import Models
+from aiautomation.mlpackage.Repository import Repository
+from aiautomation.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.Entities import HyperParamEntity
+from aiautomation.mlpackage.segmentation.SegmentationModel import Models
 from sklearn.model_selection import RepeatedStratifiedKFold
-from aipackage.mlpackage.HyperparameterTuning import HyperParameterTuning
+from aiautomation.mlpackage.HyperparameterTuning import HyperParameterTuning
 
 
 class SGRepository(Repository):
@@ -38,7 +38,7 @@ class SGRepository(Repository):
 
     def start_train(self, x, y):
         super().update_xy_data(x, y)
-        x_train, x_val, y_train, y_val = super().get_splited_data()
+        x_train, x_val, y_train, y_val = super().get_splitted_data()
         self.run_all_models(x_train, x_val, y_train, y_val)
 
     def concat_dataset_location(self):

@@ -2,11 +2,11 @@
 import lightgbm as lgb
 from sklearn.svm import SVC
 from xgboost import XGBClassifier
-from aipackage.mlpackage.Entities import MultiClasModelEnitity
+from aiautomation.mlpackage.Entities import MultiClasModelEnitity
 from catboost import CatBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from aipackage.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.PackageVariable import Variable
 from sklearn.linear_model import LogisticRegression, RidgeClassifier
 from sklearn.multiclass import OneVsOneClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
@@ -99,11 +99,11 @@ class Models:
 
         # Whole values
         kernel = ['poly', 'rbf', 'sigmoid']
-        C = [100, 10, 1.0, 0.1, 0.01]
+        c = [100, 10, 1.0, 0.1, 0.01]
         gamma = ['scale']
 
         # define grid search
-        grid = dict(estimator__kernel=kernel, estimator__C=C, estimator__gamma=gamma)
+        grid = dict(estimator__kernel=kernel, estimator__C=c, estimator__gamma=gamma)
 
         # multi class classification
         ovo = OneVsOneClassifier(svc_classifier)
@@ -111,7 +111,7 @@ class Models:
         # Start the model to run	
         self.alg_name[svc_classifier] = 'sklearn.svm.SVC'
 
-        gene_grid = dict(kernel=kernel, C=C, gamma=gamma)
+        gene_grid = dict(kernel=kernel, C=c, gamma=gamma)
 
         multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeSvc, gene_grid, svc_classifier)
         return multi_class_model_entity

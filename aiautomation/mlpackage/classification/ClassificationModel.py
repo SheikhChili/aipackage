@@ -1,7 +1,7 @@
 # IMPORT
 import lightgbm as lgb
-from aipackage.mlpackage.Entities import ClasRegModelEnitity
-from aipackage.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.Entities import ClasRegModelEnitity
+from aiautomation.mlpackage.PackageVariable import Variable
 from catboost import CatBoostClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression, RidgeClassifier

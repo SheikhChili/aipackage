@@ -57,4 +57,4 @@ class NLPManyToOneRepository(NLPRepository):
 	def createAndRunModel(self, entities):	
 		nlpClassifyModel = NLPManyToOneModel()
 		#super().clearAfterConvertWordNumericVariable()
-		super().run_all_models(nlpClassifyModel.getAllNLPManyToOneModels(), entities[0], entities[1])
+        super().run_all_models(nlpClassifyModel.getAllNLPManyToOneModels(), entities[0], entities[1], )

@@ -1,12 +1,12 @@
 # IMPORT
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from aipackage.mlpackage.Repository import Repository
-from aipackage.mlpackage.PackageVariable import Variable
-from aipackage.mlpackage.Entities import HyperParamEntity
-from aipackage.multiclassification.MultiClassModel import Models
+from aiautomation.mlpackage.Repository import Repository
+from aiautomation.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.Entities import HyperParamEntity
+from aiautomation.mlpackage.multiclassification.MultiClassModel import Models
 from sklearn.model_selection import RepeatedStratifiedKFold
-from aipackage.mlpackage.HyperparameterTuning import HyperParameterTuning
+from aiautomation.mlpackage.HyperparameterTuning import HyperParameterTuning
 
 
 class MultiClassifyRepository(Repository):
@@ -25,12 +25,12 @@ class MultiClassifyRepository(Repository):
 
         smote_x_train, smote_y_train = super().synthesize_data(train, df, label_name)
 
-        X = np.array(smote_x_train.values.tolist())
-        Y = np.array(smote_y_train.values.tolist()).ravel()
+        x = np.array(smote_x_train.values.tolist())
+        y = np.array(smote_y_train.values.tolist()).ravel()
 
-        Y = self.get_transformed_y(Y)
+        y = self.get_transformed_y(y)
 
-        self.start_train(X, Y)
+        self.start_train(x, y)
 
     def get_transformed_y(self, y):
         print("Transformed Y start -----")
@@ -60,7 +60,7 @@ class MultiClassifyRepository(Repository):
 
     def start_train(self, x, y):
         super().update_xy_data(x, y)
-        x_train, x_val, y_train, y_val = super().get_splited_data()
+        x_train, x_val, y_train, y_val = super().get_splitted_data()
         self.run_all_models(x_train, x_val, y_train, y_val)
 
     def concat_dataset_location(self):
@@ -68,12 +68,12 @@ class MultiClassifyRepository(Repository):
 
     def run_all_models(self, x_train, x_val, y_train, y_val):
         models = Models()
-        modelArray = models.get_all_models()
+        model_array = models.get_all_models()
 
         cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=1, random_state=1)
-        hPEntity = HyperParamEntity(x_train, y_train, x_val, y_val, models.get_algorithm_name(), cv,
-                                    Variable.typeMultiClass, labels=self.labels)
+        hp_entity = HyperParamEntity(x_train, y_train, x_val, y_val, models.get_algorithm_name(), cv,
+                                     Variable.typeMultiClass, labels=self.labels)
 
-        hyperParameterTuning = HyperParameterTuning(hPEntity)
+        hyper_parameter_tuning = HyperParameterTuning(hp_entity)
 
-        super().run_all_models(hyperParameterTuning, modelArray)
+        super().run_all_models(hyper_parameter_tuning, model_array)

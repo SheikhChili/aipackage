@@ -5,7 +5,7 @@ import csv
 import pickle
 import os.path
 import pandas as pd
-from aipackage.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.PackageVariable import Variable
 
 
 class InputOutputStream:
@@ -66,23 +66,23 @@ class InputOutputStream:
         self.remove_all_pickle_file()
         self.save_model(model_name, model, self.storeDataDirName + Variable.bestPickleFolderName)
 
-    def save_all_model(self, model_name, folderPath, model):
-        pickleFolderPath = self.storeDataDirName + Variable.allPickleFolderName + Variable.locationSeparator \
-                           + folderPath
-        self.save_model(model_name, model, pickleFolderPath)
+    def save_all_model(self, model_name, folder_path, model):
+        pickle_folder_path = self.storeDataDirName + Variable.allPickleFolderName + Variable.locationSeparator \
+                           + folder_path
+        self.save_model(model_name, model, pickle_folder_path)
 
-    def save_all_visualizer(self, model_name, folderPath, model, ):
-        visualizerFolderPath = self.storeDataDirName + Variable.allVisualizerFolderName + Variable.locationSeparator \
-                               + folderPath
-        self.save_model(model_name, model, visualizerFolderPath)
+    def save_all_visualizer(self, model_name, folder_path, model, ):
+        visualizer_folder_path = self.storeDataDirName + Variable.allVisualizerFolderName + Variable.locationSeparator \
+                               + folder_path
+        self.save_model(model_name, model, visualizer_folder_path)
 
     @staticmethod
-    def save_model(model_name, model, pickleFolderPath):
-        pickle_filename = pickleFolderPath + Variable.locationSeparator + model_name + Variable.pickleExtension
+    def save_model(model_name, model, pickle_folder_path):
+        pickle_filename = pickle_folder_path + Variable.locationSeparator + model_name + Variable.pickleExtension
         pickle.dump(model, open(pickle_filename, Variable.writeBinary))
 
-    def export_gene(self, tpot, fileName):
-        gene_file_name = self.storeDataDirName + Variable.geneFolderName + Variable.locationSeparator + fileName \
+    def export_gene(self, tpot, file_name):
+        gene_file_name = self.storeDataDirName + Variable.geneFolderName + Variable.locationSeparator + file_name \
                          + Variable.pythonExtension
         tpot.export(gene_file_name)
 
@@ -98,35 +98,35 @@ class InputOutputStream:
         self.check_and_create_dir(self.storeDataDirName + Variable.allVisualizerFolderName)
         self.check_and_create_dir(self.storeDataDirName + Variable.edaLocation)
 
-    def create_model_folder(self, folderPath):
-        self.create_pickle_folder(folderPath)
-        self.create_visualizer_folder(folderPath)
+    def create_model_folder(self, folder_path):
+        self.create_pickle_folder(folder_path)
+        self.create_visualizer_folder(folder_path)
 
     def create_visualizer_folder(self, folder_path):
-        visualizerFolderPath = self.storeDataDirName + Variable.allVisualizerFolderName + Variable.locationSeparator \
+        visualizer_folder_path = self.storeDataDirName + Variable.allVisualizerFolderName + Variable.locationSeparator \
                                + folder_path
-        self.check_and_create_dir(visualizerFolderPath)
+        self.check_and_create_dir(visualizer_folder_path)
 
     def create_pickle_folder(self, folder_path):
-        pickleFolderPath = self.storeDataDirName + Variable.allPickleFolderName + Variable.locationSeparator \
+        pickle_folder_path = self.storeDataDirName + Variable.allPickleFolderName + Variable.locationSeparator \
                            + folder_path
-        self.check_and_create_dir(pickleFolderPath)
+        self.check_and_create_dir(pickle_folder_path)
 
     @staticmethod
-    def check_and_create_dir(directoryName):
-        if not os.path.exists(directoryName):
-            os.mkdir(directoryName)
+    def check_and_create_dir(directory_name):
+        if not os.path.exists(directory_name):
+            os.mkdir(directory_name)
 
-    def check_and_save_as_feather(self, actualFolderPath, csvFileName, featherFileName):
-        filename = actualFolderPath + csvFileName
+    def check_and_save_as_feather(self, actual_folder_path, csv_file_name, feather_file_name):
+        filename = actual_folder_path + csv_file_name
         if os.path.isfile(filename):
             df = pd.read_csv(filename)
-            featherFolderPath = actualFolderPath + Variable.featherFolderName
-            self.check_and_create_dir(featherFolderPath)
-            featherFilePath = featherFolderPath + featherFileName
-            if os.path.isfile(featherFilePath):
+            feather_folder_path = actual_folder_path + Variable.featherFolderName
+            self.check_and_create_dir(feather_folder_path)
+            feather_file_path = feather_folder_path + feather_file_name
+            if os.path.isfile(feather_file_path):
                 return
-            df.to_feather(featherFilePath)
+            df.to_feather(feather_file_path)
 
     def get_saved_model(self):
         pickle_model_dir = self.storeDataDirName + Variable.bestPickleFolderName

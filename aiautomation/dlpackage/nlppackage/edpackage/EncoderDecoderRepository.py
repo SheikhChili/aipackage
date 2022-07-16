@@ -78,7 +78,7 @@ class EDRepository(Repository):
 					
 	def createAndRunModel(self):
 		edModel = EDModel()
-		super().run_all_models(edModel.getAllEDModels(), self.getModelEntity(), self.getDatasetEntity())
+        super().run_all_models(edModel.getAllEDModels(), self.getModelEntity(), self.getDatasetEntity(), )
 		
 			
 	def getDatasetEntity(self):

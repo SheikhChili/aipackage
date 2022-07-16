@@ -2,7 +2,7 @@
 import threading
 import time
 
-#import dalex as dx
+# import dalex as dx
 # EDA
 import dtale
 import eli5
@@ -14,11 +14,11 @@ import pandas as pd
 # EXPLAINABLE
 import shap
 import sweetviz as sv
-from aipackage.customThreading import ThreadWithReturnValue
-from aipackage.mlpackage.CustomMetrics import CustomMetrics
-from aipackage.mlpackage.DataConversion import DataConversion
-from aipackage.mlpackage.PackageVariable import Variable
-from aipackage.mlpackage.StoreData import InputOutputStream
+from aiautomation.customThreading import ThreadWithReturnValue
+from aiautomation.mlpackage.CustomMetrics import CustomMetrics
+from aiautomation.mlpackage.DataConversion import DataConversion
+from aiautomation.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.StoreData import InputOutputStream
 # IBM EX_AI
 from aix360.algorithms.contrastive import CEMExplainer, KerasClassifier
 from aix360.algorithms.ted.TED_Cartesian import TED_CartesianExplainer
@@ -287,7 +287,8 @@ class Repository:
         # WILL WORK IN JUPYTER HERE NO VISUALIZATION
         av = AutoViz_Class()
         sep = ","
-        autoviz_dir = Variable.edaLocation + Variable.locationSeparator + fileName + Variable.autoviz + Variable.htmlExtension
+        autoviz_dir = Variable.edaLocation + Variable.locationSeparator + fileName + Variable.autoviz + Variable\
+            .htmlExtension
         dft = av.AutoViz('', sep, label_name, df, chart_format="html", save_plot_dir=autoviz_dir)
         print("\n")
         '''    sep, which is the separator by which data is separated, by default it is ‘,’.
@@ -355,17 +356,17 @@ class Repository:
 
         # 1. DTALE
         print("\n DTALE STARTED ------- \n")
-        self.show_dtale(df, file_name)
+        self.show_dtale(df, file_name)  # OPEN BROWSER
         print("\n DTALE FINISHED ------- \n")
 
         # 2. PANDAS PROFILING
         print("\n PANDAS PROFILING STARTED ------- \n")
-        self.show_pandas_profiling(df, file_name)
+        self.show_pandas_profiling(df, file_name)  # SAVE FILE
         print("\n PANDAS PROFILING FINISHED ------- \n")
 
         # 3. SWEETVIZ
         print("\n SWEETVIZ STARTED ------- \n")
-        self.show_sweetviz(df, file_name)
+        self.show_sweetviz(df, file_name)  # SAVE FILE
         print("\n SWEETVIZ FINISHED ------- \n")
 
         # 4. LUX
@@ -376,7 +377,7 @@ class Repository:
 
         # 5. DATA PREP
         print("\n DATA PREP STARTED ------- \n")
-        # self.showDataPrep(df, fileName)
+        # self.showDataPrep(df, fileName)   #PACKAGE ERROR
         print("\n DATA PREP FINISHED ------- \n")
 
         # 6. PANDAS VISUAL ANALYSIS
@@ -386,13 +387,14 @@ class Repository:
 
         # 7. AUTOVIZ
         print("\n AUTOVIZ STARTED ------- \n")
-        # self.showAutoViz(df, fileName, labelName)
+        # self.showAutoViz(df, fileName, labelName) #PACKAGE ERROR
         print("\n AUTOVIZ FINISHED ------- \n")
 
         ''''# 8. K L I B E
         print("\n KLIBE STARTED ------- \n")
         self.show_klib(df)  # As of now , we will comment this because this is not useful
         print("\n KLIBE FINISHED ------- \n")'''
+        # assert(0==1)
 
     @staticmethod
     def show_eli5(model, x_test, columns):

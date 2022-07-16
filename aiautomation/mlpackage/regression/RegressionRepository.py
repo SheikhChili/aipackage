@@ -1,11 +1,11 @@
 # IMPORT
 import numpy as np
 from sklearn.model_selection import KFold
-from aipackage.mlpackage.Repository import Repository
-from aipackage.regression.RegressionModel import Models
-from aipackage.mlpackage.PackageVariable import Variable
-from aipackage.mlpackage.Entities import HyperParamEntity
-from aipackage.mlpackage.HyperparameterTuning import HyperParameterTuning
+from aiautomation.mlpackage.Repository import Repository
+from aiautomation.mlpackage.regression.RegressionModel import Models
+from aiautomation.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.Entities import HyperParamEntity
+from aiautomation.mlpackage.HyperparameterTuning import HyperParameterTuning
 
 
 class RegRepository(Repository):
@@ -21,19 +21,19 @@ class RegRepository(Repository):
         print("COLUMN NULL CHECK TRAIN")
         print(train.isnull().sum(), "\n")
 
-        X = np.array(train.values.tolist())
-        Y = np.array(df.values.tolist())
+        x = np.array(train.values.tolist())
+        y = np.array(df.values.tolist())
 
-        print(X.shape)
-        print(Y.shape, "\n")
-        self.start_train(X, Y)
+        print(x.shape)
+        print(y.shape, "\n")
+        self.start_train(x, y)
 
     def update_user_scoring_dict(self, user_scoring_dict=None):
         super().update_user_scoring_dict(user_scoring_dict)
 
     def start_train(self, x, y):
         super().update_xy_data(x, y)
-        x_train, x_val, y_train, y_val = super().get_splited_data()
+        x_train, x_val, y_train, y_val = super().get_splitted_data()
         self.run_all_models(x_train, y_train, x_val, y_val)
 
     def concat_dataset_location(self):
@@ -41,7 +41,7 @@ class RegRepository(Repository):
 
     def run_all_models(self, x_train, y_train, x_val, y_val):
         models = Models()
-        modelArray = models.get_all_models()
+        model_array = models.get_all_models()
 
         cv = KFold(n_splits=10, shuffle=True, random_state=100)
         hp_entity = HyperParamEntity(x_train, y_train, x_val, y_val, models.get_algorithm_name(), cv,
@@ -49,4 +49,4 @@ class RegRepository(Repository):
 
         hyper_parameter_tuning = HyperParameterTuning(hp_entity)
 
-        super().run_all_models(hyper_parameter_tuning, modelArray)
+        super().run_all_models(hyper_parameter_tuning, model_array)

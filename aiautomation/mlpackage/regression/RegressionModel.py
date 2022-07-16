@@ -4,10 +4,10 @@ import lightgbm as lgb
 from sklearn.svm import SVR
 from xgboost import XGBRegressor
 from catboost import CatBoostRegressor
-from aipackage.mlpackage.Entities import ClasRegModelEnitity
+from aiautomation.mlpackage.Entities import ClasRegModelEnitity
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsRegressor
-from aipackage.mlpackage.PackageVariable import Variable
+from aiautomation.mlpackage.PackageVariable import Variable
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
 
@@ -24,10 +24,10 @@ class Models:
         linreg = LinearRegression()
         fit_intercept = [True, False]
         # normalize = [True, False]
-        copy_X = [True, False]
+        copy_x = [True, False]
 
         # define grid search
-        grid = dict(fit_intercept=fit_intercept, copy_X=copy_X)
+        grid = dict(fit_intercept=fit_intercept, copy_X=copy_x)
 
         clas_reg_model_entity = ClasRegModelEnitity(linreg, grid, Variable.typeLinReg)
         self.alg_name[linreg] = 'sklearn.linear_model.LinearRegression'
@@ -76,11 +76,11 @@ class Models:
         svr = SVR()
         kernel = ['linear', 'poly', 'rbf', 'sigmoid']
         gamma = ['scale', 'auto']
-        C = [100, 10, 1.0, 0.1, 0.01]
+        c = [100, 10, 1.0, 0.1, 0.01]
         # epsilon = [0.1,0.2,0.5,0.3]
 
         # define grid search
-        grid = dict(kernel=kernel, gamma=gamma, C=C)
+        grid = dict(kernel=kernel, gamma=gamma, C=c)
 
         clas_reg_model_entity = ClasRegModelEnitity(svr, grid, Variable.typeSvc)
         self.alg_name[svr] = 'sklearn.svm.SVR'
