@@ -98,7 +98,7 @@ class HyperParameterTuning:
 
         return AccuracyEntity(file_name, score, val_score, str(grid_search.best_params_))
 
-    # BAYESIAN OPTIMIZATION
+    # BAYESIAN OPTIMIZATION # https://www.kaggle.com/code/prashant111/bayesian-optimization-using-hyperopt/notebook
     def model_bayes_fit(self, model_entity, file_name, folder_path):
 
         x_train = self.hPEntity.x_train
@@ -107,11 +107,11 @@ class HyperParameterTuning:
         grid = model_entity.grid
 
         # Objective
-        def objective():
+        def objective(params):
             temp_score = cross_val_score(model, x_train, y_train, cv=self.hPEntity.cv,
                                          scoring=self.hPEntity.scoring).mean()
             # We aim to maximize accuracy, therefore we return it as a negative value
-            return {'loss': temp_score, 'status': STATUS_OK}
+            return {'loss': -temp_score, 'status': STATUS_OK}
 
         trials = Trials()
         best = fmin(fn=objective,
