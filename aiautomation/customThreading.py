@@ -5,7 +5,9 @@ class ThreadWithReturnValue(Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}):
         Thread.__init__(self, group, target, name, args, kwargs)
-        self._target = None
+        self._args = args
+        self._kwargs = kwargs
+        self._target = target
         self._return = None
 
     def run(self):
