@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ai_automation',
-    version='2.2.0',
+    version='2.2.1',
     license='MIT',
     author="SheikhChili",
     author_email='sparrow.shreyas@gmail.com',
