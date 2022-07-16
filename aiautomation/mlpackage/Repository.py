@@ -282,8 +282,8 @@ class Repository:
             t1.start()
             t1.join()
 
-    @staticmethod
-    def show_auto_viz(df, filename, label_name):
+
+    def show_auto_viz(self, df, filename, label_name):
         # WILL WORK IN JUPYTER HERE NO VISUALIZATION
         av = AutoViz_Class()
         sep = ","
@@ -298,16 +298,15 @@ class Repository:
                 max_cols_analyzed is used to define the number of columns to be analyzed.
                 argument depVar which is the dependent variable so that AutoViz creates visualization accordingly.'''
 
-    @staticmethod
-    def show_pandas_profiling(df, file_name):
+
+    def show_pandas_profiling(self, df, file_name):
         profile = ProfileReport(df, title=file_name, explorative=True)
         profile.to_widgets()
         html_filename = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + file_name + \
                         Variable.pandasProfiling + Variable.htmlExtension
         profile.to_file(html_filename)
 
-    @staticmethod
-    def show_sweetviz(df, file_name):
+    def show_sweetviz(self, df, file_name):
         report = sv.analyze(df)
         html_filename = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + file_name + \
                         Variable.sweetviz + Variable.htmlExtension
@@ -345,8 +344,7 @@ class Repository:
         # Variable.htmlExtension dtale.offline_chart(df, filepath=dtale_file_path, title=fileName)
         dtale.show(df).open_browser()
 
-    @staticmethod
-    def show_data_prep(df, file_name):
+    def show_data_prep(self, df, file_name):
         report = create_report(df, title=file_name)
         report.save(filename=Variable.dataPrep, to=self.io.storeDataDirName + Variable.edaLocation)
 
