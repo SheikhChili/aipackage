@@ -163,10 +163,10 @@ class HyperParameterTuning:
             tpot = TPOTClassifier(generations=5, population_size=24, offspring_size=12, verbosity=2, early_stop=12,
                                   config_dict={self.hPEntity.alg_name[model]: grid}, cv=cv, scoring=scoring)
 
-        model = tpot.fitted_pipeline_
+        model = tpot.fit(x_train, y_train)
 
         # TODO REMOVE THE BELOW COMMENTED CODE AND TRY TO GET GENE FILE PATH LOCATION ACCORDING TO RUN ALL FILE
-        self.export_gene(tpot, file_name)
+        self.export_gene(model, file_name)
 
         score = 0
         val_score = 0
