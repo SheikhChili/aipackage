@@ -18,8 +18,8 @@ class HyperParameterTuning:
 
     def __init__(self, hp_entity):
         self.hPEntity = hp_entity
-        print("X_TRAIN SHAPE = "+hp_entity.x_train.shape)
-        print("Y_TRAIN SHAPE = " + hp_entity.y_train.shape)
+        print("X_TRAIN SHAPE = ", hp_entity.x_train.shape)
+        print("Y_TRAIN SHAPE = ", hp_entity.y_train.shape)
         self.best_score = 0
         self.best_val_score = 0
         self.io = None
@@ -29,8 +29,8 @@ class HyperParameterTuning:
     def set_actual_folder_name(self, folder_name):
         self.actualFolderName = folder_name
 
-    def init_wand_b(self, name):
-        wandb.init(project=self.actualFolderName, name=name)
+    def init_wand_b(self, name, custom_dir):
+        wandb.init(project=self.actualFolderName, name=name, save_code=True, dir=custom_dir)
 
     def update_io(self, io):
         self.io = io
@@ -303,7 +303,8 @@ class HyperParameterTuning:
         # visualizer.show()
 
     def start_wandb(self, model, x_train, y_train, x_val, y_val, model_name, model_type):
-        self.init_wand_b(model_name)
+        wandb_dir = self.io.storeDataDirName + Variable.locationSeparator + Variable.dataFolderName
+        self.init_wand_b(model_name, wandb_dir)
         wandb.sklearn.plot_learning_curve(model, x_train, y_train)
 
         if model_type == Variable.typeSegmentation:
