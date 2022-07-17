@@ -153,7 +153,7 @@ class Repository:
     def get_splitted_data(self):
         # TRAIN TEST SPLIT DATASET
         xy_data = self.get_xy_data()
-        return train_test_split(xy_data[0], xy_data[1], train_size=0.70, random_state=1)
+        return train_test_split(xy_data[0], xy_data[1], train_size=0.80, random_state=1)
 
     @staticmethod
     def get_train_file_name():
@@ -282,7 +282,6 @@ class Repository:
             t1.start()
             t1.join()
 
-
     def show_auto_viz(self, df, filename, label_name):
         # WILL WORK IN JUPYTER HERE NO VISUALIZATION
         av = AutoViz_Class()
@@ -297,7 +296,6 @@ class Repository:
                 max_row_analyzed is used to define the number of rows to be analyzed
                 max_cols_analyzed is used to define the number of columns to be analyzed.
                 argument depVar which is the dependent variable so that AutoViz creates visualization accordingly.'''
-
 
     def show_pandas_profiling(self, df, file_name):
         profile = ProfileReport(df, title=file_name, explorative=True)

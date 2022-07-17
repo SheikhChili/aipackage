@@ -18,6 +18,8 @@ class HyperParameterTuning:
 
     def __init__(self, hp_entity):
         self.hPEntity = hp_entity
+        print("X_TRAIN SHAPE = "+hp_entity.x_train.shape)
+        print("Y_TRAIN SHAPE = " + hp_entity.y_train.shape)
         self.best_score = 0
         self.best_val_score = 0
         self.io = None
@@ -279,7 +281,7 @@ class HyperParameterTuning:
             return best_score < score
 
     def start_visualization(self, model, cv, scoring, x_train, y_train, x_val, y_val, grid, model_name, folder_path):
-        print("startVisualization")
+
         matplotlib.use('Agg')
         self.start_learning_curve(model, cv, scoring, x_train, y_train, model_name, folder_path)
         print("\n")
@@ -331,5 +333,7 @@ class HyperParameterTuning:
 
     def run_all_visualization(self, model, cv, scoring, x_train, y_train, x_val, y_val, grid, model_name, model_type,
                               folder_path):
+        print("\nstart Visualization\n")
         self.start_visualization(model, cv, scoring, x_train, y_train, x_val, y_val, grid, model_name, folder_path)
         self.start_wandb(model, x_train, y_train, x_val, y_val, model_name, model_type)
+        print("\nfinished Visualization\n")
