@@ -7,6 +7,7 @@ class Variable:
     writeBinary = 'wb'
     readBinary = 'rb'
     modelFileName = 'data/models.feather'
+    edaFileName = 'data/EDA/eda.feather'
     datasetLocation = '../../../Dataset/'
     tempDatasetLocation = '../Dataset/'
     submissionFileName = 'submission.csv'
@@ -77,6 +78,6 @@ class Variable:
     scoreName = 'Best_Score'
     valScoreName = 'Best_Val_Score'
 
-    isRunAllFileEnabled = False
-    runAllFileLimitStart = 1000
-    runAllFileLimitEnd = 5000
+    isRunAllFileEnabled = True
+    runAllFileLimitStart = 0
+    runAllFileLimitEnd = 1000

@@ -26,8 +26,8 @@ from aix360.algorithms.ted.TED_Cartesian import TED_CartesianExplainer
 from explainerdashboard import ClassifierExplainer, ExplainerDashboard, RegressionExplainer
 from explainerdashboard import InlineExplainer
 from pandas_profiling import ProfileReport
-# from dataprep.eda import create_report
-# from autoviz.AutoViz_Class import AutoViz_Class
+from dataprep.eda import create_report
+from autoviz.AutoViz_Class import AutoViz_Class
 from pandas_visual_analysis import VisualAnalysis
 from sklearn.ensemble import IsolationForest
 from sklearn.model_selection import train_test_split
@@ -38,6 +38,7 @@ class Repository:
     def __init__(self):
         self.type = Variable.typeClassification
         self.storedModelFileNameArray = []
+        self.storedEdaFileNameArray = []
         self.scoringDict = {}
         self.userScoringDict = None
         self.datasetLocation = Variable.datasetLocation
@@ -109,6 +110,9 @@ class Repository:
 
     def write_acc_model(self, array):
         self.io.write_acc_model(array)
+
+    def write_eda_feather(self, file_name):
+        self.io.write_eda_feather(file_name)
 
     @staticmethod
     def create_result_array(acc_entity):
@@ -282,11 +286,13 @@ class Repository:
             t1.start()
             t1.join()
 
-    def show_auto_viz(self, df, filename, label_name):
+    def show_auto_viz(self, df, file_name, label_name):
+        if file_name + Variable.autoviz in self.storedEdaFileNameArray:
+            return
         # WILL WORK IN JUPYTER HERE NO VISUALIZATION
         av = AutoViz_Class()
         sep = ","
-        autoviz_dir = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + fileName + \
+        autoviz_dir = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + file_name + \
                       Variable.autoviz + Variable.htmlExtension
         dft = av.AutoViz('', sep, label_name, df, chart_format="html", save_plot_dir=autoviz_dir)
         print("\n")
@@ -296,19 +302,26 @@ class Repository:
                 max_row_analyzed is used to define the number of rows to be analyzed
                 max_cols_analyzed is used to define the number of columns to be analyzed.
                 argument depVar which is the dependent variable so that AutoViz creates visualization accordingly.'''
+        self.write_eda_feather(file_name + Variable.autoviz)
 
     def show_pandas_profiling(self, df, file_name):
+        if file_name + Variable.pandasProfiling in self.storedEdaFileNameArray:
+            return
         profile = ProfileReport(df, title=file_name, explorative=True)
         profile.to_widgets()
         html_filename = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + file_name + \
                         Variable.pandasProfiling + Variable.htmlExtension
         profile.to_file(html_filename)
+        self.write_eda_feather(file_name + Variable.pandasProfiling)
 
     def show_sweetviz(self, df, file_name):
+        if file_name + Variable.sweetviz in self.storedEdaFileNameArray:
+            return
         report = sv.analyze(df)
         html_filename = self.io.storeDataDirName + Variable.edaLocation + Variable.locationSeparator + file_name + \
                         Variable.sweetviz + Variable.htmlExtension
         report.show_html(html_filename, open_browser=False)
+        self.write_eda_feather(file_name + Variable.sweetviz)
 
     # As of now , we will comment this because this is not useful
     def show_klib(self, df):
@@ -338,21 +351,28 @@ class Repository:
 
     @staticmethod
     def show_dtale(df, file_name):
+        if file_name + Variable.dtale in self.storedEdaFileNameArray:
+            return
         # dtale_file_path = Variable.edaLocation + Variable.locationSeparator + file_name + Variable.dtale +
         # Variable.htmlExtension dtale.offline_chart(df, filepath=dtale_file_path, title=fileName)
         dtale.show(df).open_browser()
+        self.write_eda_feather(file_name + Variable.dtale)
 
     def show_data_prep(self, df, file_name):
+        if file_name + Variable.dataPrep in self.storedEdaFileNameArray:
+            return
         report = create_report(df, title=file_name)
-        report.save(filename=Variable.dataPrep, to=self.io.storeDataDirName + Variable.edaLocation)
+        report.save(filename=file_name + Variable.dataPrep, to=self.io.storeDataDirName + Variable.edaLocation)
+        self.write_eda_feather(file_name + Variable.dataPrep)
 
-    def run_eda(self, file_name, label_name, df):
+    def run_eda(self, file_name, label_name, df, should_use_data_prep=True):
+        self.update_stored_eda_file_name_array()
         if df.empty:
             return
 
         # 1. DTALE
         print("\n DTALE STARTED ------- \n")
-        self.show_dtale(df, file_name)  # OPEN BROWSER
+        # self.show_dtale(df, file_name)  # OPEN BROWSER
         print("\n DTALE FINISHED ------- \n")
 
         # 2. PANDAS PROFILING
@@ -368,22 +388,23 @@ class Repository:
         # 4. LUX
         # @TODO: NOT WORKING WILL IMPLEMENT IN FUTURE
         print("\n LUX STARTED ------- \n")
-        print(df)
+        # print(df)
         print("\n LUX FINISHED ------- \n")
 
         # 5. DATA PREP
         print("\n DATA PREP STARTED ------- \n")
-        # self.showDataPrep(df, fileName)   #PACKAGE ERROR
+        if should_use_data_prep:
+            self.show_data_prep(df, file_name)  # PACKAGE ERROR
         print("\n DATA PREP FINISHED ------- \n")
 
         # 6. PANDAS VISUAL ANALYSIS
         print("\n PANDAS VISUAL ANALYSIS STARTED ------- \n")
-        VisualAnalysis(df)
+        # VisualAnalysis(df)
         print("\n PANDAS VISUAL ANALYSIS FINISHED ------- \n")
 
         # 7. AUTOVIZ
         print("\n AUTOVIZ STARTED ------- \n")
-        # self.showAutoViz(df, fileName, labelName) #PACKAGE ERROR
+        self.show_auto_viz(df, file_name, label_name)  # PACKAGE ERROR
         print("\n AUTOVIZ FINISHED ------- \n")
 
         ''''# 8. K L I B E
@@ -795,6 +816,9 @@ class Repository:
 
     def update_stored_model_file_name_array(self):
         self.storedModelFileNameArray = self.io.get_stored_model_file_name_array()
+
+    def update_stored_eda_file_name_array(self):
+        self.storedEdaFileNameArray = self.io.get_stored_eda_file_name_array()
 
     def check_and_create_related_dirs(self):
         self.io.check_and_create_all_dirs()

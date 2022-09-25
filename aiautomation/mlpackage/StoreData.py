@@ -48,12 +48,30 @@ class InputOutputStream:
         df = pd.DataFrame(big_array, columns=field)
         df.to_feather(filename)
 
+
+    def write_eda_feather(self, file_name):
+        filename = self.storeDataDirName + Variable.edaFileName
+        field = ['Filename']
+        df = self.get_stored_model_data(filename)  
+        big_array = df.values.tolist()
+        big_array.append([file_name])
+        df = pd.DataFrame(big_array, columns=field)
+        df.to_feather(filename)
+
+
     def get_stored_model_file_name_array(self):
         df = self.get_stored_model_data(self.storeDataDirName + Variable.modelFileName)
         if df.empty:
             return []
         else:
             return df['Filename'].values.tolist()
+
+    def get_stored_eda_file_name_array(self):
+        df = self.get_stored_model_data(self.storeDataDirName + Variable.edaFileName)
+        if df.empty:
+            return []
+        else:
+            return df['Filename'].values.tolist()        
 
     @staticmethod
     def get_stored_model_data(filename):
