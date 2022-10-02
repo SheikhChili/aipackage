@@ -349,9 +349,8 @@ class Repository:
         klib.preprocess.PipeInfo()  # prints out the shape of the data at the specified step of a Pipeline"""
         pass
 
-    @staticmethod
-    def show_dtale(df, file_name):
-        if file_name + Variable.dtale in self.storedEdaFileNameArray:
+    def show_dtale(self, df, file_name, force_run_dtale=False):
+        if file_name + Variable.dtale in self.storedEdaFileNameArray and not force_run_dtale:
             return
         # dtale_file_path = Variable.edaLocation + Variable.locationSeparator + file_name + Variable.dtale +
         # Variable.htmlExtension dtale.offline_chart(df, filepath=dtale_file_path, title=fileName)
@@ -365,14 +364,14 @@ class Repository:
         report.save(filename=file_name + Variable.dataPrep, to=self.io.storeDataDirName + Variable.edaLocation)
         self.write_eda_feather(file_name + Variable.dataPrep)
 
-    def run_eda(self, file_name, label_name, df, should_use_data_prep=True):
+    def run_eda(self, file_name, label_name, df, should_use_data_prep=True, force_run_dtale=False):
         self.update_stored_eda_file_name_array()
         if df.empty:
             return
 
         # 1. DTALE
         print("\n DTALE STARTED ------- \n")
-        # self.show_dtale(df, file_name)  # OPEN BROWSER
+        self.show_dtale(df, file_name)  # OPEN BROWSER
         print("\n DTALE FINISHED ------- \n")
 
         # 2. PANDAS PROFILING

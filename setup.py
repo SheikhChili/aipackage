@@ -1,8 +1,8 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='ai_automation',
-    version='2.7.0',
+    version='2.8.1',
     license='MIT',
     author="SheikhChili",
     author_email='sparrow.shreyas@gmail.com',
