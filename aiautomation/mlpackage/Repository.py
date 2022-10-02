@@ -371,7 +371,7 @@ class Repository:
 
         # 1. DTALE
         print("\n DTALE STARTED ------- \n")
-        self.show_dtale(df, file_name)  # OPEN BROWSER
+        self.show_dtale(df, file_name, force_run_dtale)  # OPEN BROWSER
         print("\n DTALE FINISHED ------- \n")
 
         # 2. PANDAS PROFILING
