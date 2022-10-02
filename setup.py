@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='ai_automation',
-    version='2.8.2',
+    version='2.9.1',
     license='MIT',
     author="SheikhChili",
     author_email='sparrow.shreyas@gmail.com',
@@ -13,10 +13,10 @@ setup(
     url='https://github.com/SheikhChili/aipackage',
     keywords='AI Automation',
     install_requires=[
-        'scikit-learn', 'xgboost', 'catboost', 'lightgbm', 'numpy', 'pandas', 'tensorflow', 'imblearn', 'optuna',
+        'scikit-learn', 'xgboost', 'catboost', 'lightgbm', 'numpy', 'pandas==1.4.2', 'tensorflow', 'imblearn', 'optuna',
         'tpot', 'hyperopt', 'yellowbrick', 'librosa', 'keras_tuner', 'spacy', 'unidecode', 'bs4', 'dtale',
         'lime', 'matplotlib', 'shap', 'sweetviz', 'aix360', 'explainerdashboard', 'pandas_profiling',
-        'pandas_visual_analysis'
+        'pandas_visual_analysis', 'markupsafe==2.0.1', 'typing-extensions==4.3.0'
     ],
 
 )

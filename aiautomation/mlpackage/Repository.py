@@ -354,7 +354,7 @@ class Repository:
             return
         # dtale_file_path = Variable.edaLocation + Variable.locationSeparator + file_name + Variable.dtale +
         # Variable.htmlExtension dtale.offline_chart(df, filepath=dtale_file_path, title=fileName)
-        dtale.show(df).open_browser()
+        dtale.show(df, open_browser = True, host='localhost', subprocess=False)
         self.write_eda_feather(file_name + Variable.dtale)
 
     def show_data_prep(self, df, file_name):

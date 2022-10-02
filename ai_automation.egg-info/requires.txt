@@ -3,7 +3,7 @@ xgboost
 catboost
 lightgbm
 numpy
-pandas
+pandas==1.4.2
 tensorflow
 imblearn
 optuna
@@ -24,3 +24,5 @@ aix360
 explainerdashboard
 pandas_profiling
 pandas_visual_analysis
+markupsafe==2.0.1
+typing-extensions==4.3.0

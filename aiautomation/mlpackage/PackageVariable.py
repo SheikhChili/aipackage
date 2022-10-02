@@ -78,6 +78,6 @@ class Variable:
     scoreName = 'Best_Score'
     valScoreName = 'Best_Val_Score'
 
-    isRunAllFileEnabled = True
+    isRunAllFileEnabled = False
     runAllFileLimitStart = 0
     runAllFileLimitEnd = 1000
