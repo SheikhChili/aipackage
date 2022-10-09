@@ -2,7 +2,7 @@
 import lightgbm as lgb
 from sklearn.svm import SVC
 from xgboost import XGBClassifier
-from aiautomation.mlpackage.Entities import MultiClasModelEnitity
+from aiautomation.mlpackage.Entities import MultiClasModelEntity
 from catboost import CatBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -40,7 +40,7 @@ class Models:
 
         gene_grid = dict(solver=solvers, penalty=penalty, C=c_values)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeLogReg, gene_grid, logistic_reg)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeLogReg, gene_grid, logistic_reg)
         return multi_class_model_entity
 
     # -----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ class Models:
 
         gene_grid = dict(alpha=alpha)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeRidge, gene_grid, rid_clas)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeRidge, gene_grid, rid_clas)
         return multi_class_model_entity
 
     # -----------------------------------------------------------------------------
@@ -88,7 +88,7 @@ class Models:
 
         gene_grid = dict(n_neighbors=n_neighbors, weights=weights, metric=metric)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeKnn, gene_grid, knn)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeKnn, gene_grid, knn)
         return multi_class_model_entity
 
     # -----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ class Models:
 
         gene_grid = dict(kernel=kernel, C=c, gamma=gamma)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeSvc, gene_grid, svc_classifier)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeSvc, gene_grid, svc_classifier)
         return multi_class_model_entity
 
     # -----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ class Models:
         gene_grid = dict(max_depth=max_depth, max_features=max_features, min_samples_leaf=min_sample_leaf,
                          criterion=criterion)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeDesTree, gene_grid,
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeDesTree, gene_grid,
                                                          des_tree_classifier)
         return multi_class_model_entity
 
@@ -166,7 +166,7 @@ class Models:
 
         gene_grid = dict(n_estimators=n_estimators, max_features=max_features)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeRanFor, gene_grid, ran_for_classifier)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeRanFor, gene_grid, ran_for_classifier)
         return multi_class_model_entity
 
     '''#-----------------------------------------------------------------------------
@@ -244,7 +244,7 @@ class Models:
         gene_grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, subsample=subsample,
                          max_depth=max_depth)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeGradBoost, gene_grid, grad_boost_class)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeGradBoost, gene_grid, grad_boost_class)
         return multi_class_model_entity
 
     # -----------------------------------------------------------------------------
@@ -278,7 +278,7 @@ class Models:
         # define grid search
         gene_grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, algorithm=algorithm)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeAdaBoost, gene_grid, ada_boost_class)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeAdaBoost, gene_grid, ada_boost_class)
         return multi_class_model_entity
 
     # -----------------------------------------------------------------------------
@@ -313,7 +313,7 @@ class Models:
                          max_depth=max_depth, min_child_weight=min_child_weight, gamma=gamma,
                          colsample_bytree=col_sample_by_tree, reg_alpha=reg_alpha)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeXgb, gene_grid, xgb_model)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeXgb, gene_grid, xgb_model)
         return multi_class_model_entity
 
     # -----------------------------------------------------------------------------
@@ -342,7 +342,7 @@ class Models:
         gene_grid = dict(learning_rate=learning_rate, num_leaves=num_leaves, max_bin=max_bin, max_depth=max_depth,
                          objective=objective)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeLGBM, gene_grid, lightgbm)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeLGBM, gene_grid, lightgbm)
         return multi_class_model_entity
 
     # -----------------------------------------------------------------------------
@@ -375,7 +375,7 @@ class Models:
         gene_grid = dict(learning_rate=learning_rate, depth=depth, iterations=iterations, l2_leaf_reg=l2_leaf_reg,
                          border_count=border_count, ctr_border_count=ctr_border_count, thread_count=thread_count)
 
-        multi_class_model_entity = MultiClasModelEnitity(ovo, grid, Variable.typeCGBM, gene_grid, catboost)
+        multi_class_model_entity = MultiClasModelEntity(ovo, grid, Variable.typeCGBM, gene_grid, catboost)
         return multi_class_model_entity
 
     def get_all_models(self):

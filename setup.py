@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='ai_automation',
-    version='2.9.1',
+    version='3.0.1',
     license='MIT',
     author="SheikhChili",
     author_email='sparrow.shreyas@gmail.com',
@@ -16,7 +16,7 @@ setup(
         'scikit-learn', 'xgboost', 'catboost', 'lightgbm', 'numpy', 'pandas==1.4.2', 'tensorflow', 'imblearn', 'optuna',
         'tpot', 'hyperopt', 'yellowbrick', 'librosa', 'keras_tuner', 'spacy', 'unidecode', 'bs4', 'dtale',
         'lime', 'matplotlib', 'shap', 'sweetviz', 'aix360', 'explainerdashboard', 'pandas_profiling',
-        'pandas_visual_analysis', 'markupsafe==2.0.1', 'typing-extensions==4.3.0'
+        'pandas_visual_analysis', 'markupsafe==2.0.1'
     ],
 
 )

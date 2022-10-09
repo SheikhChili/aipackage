@@ -288,7 +288,7 @@ class HyperParameterTuning:
         # self.startValidationCurve(model, cv, scoring, x_val, y_val, grid, modelName, folderPath)
 
     def start_learning_curve(self, model, cv, scoring, x, y, model_name, folder_path):
-        visualizer = LearningCurve(model, cv=cv, scoring=scoring, n_jobs=4)
+        visualizer = LearningCurve(model, cv=cv, scoring=scoring, n_jobs=-1)
         visualizer.fit(x, y)  # Fit the data to the visualizer
         model_name = model_name + Variable.fileSeparator + Variable.learningCurve
         self.save_all_visualizer(model_name, folder_path, visualizer)
@@ -296,7 +296,7 @@ class HyperParameterTuning:
 
     def start_validation_curve(self, model, cv, scoring, x, y, grid, model_name, folder_path):
         for key, value in grid.items():
-            visualizer = ValidationCurve(model, cv=cv, scoring=scoring, n_jobs=4, param_name=key, param_range=value)
+            visualizer = ValidationCurve(model, cv=cv, scoring=scoring, n_jobs=-1, param_name=key, param_range=value)
             visualizer.fit(x, y)  # Fit the data to the visualizer
             model_name = model_name + Variable.fileSeparator + key + Variable.fileSeparator + Variable.validationCurve
             self.save_all_visualizer(model_name, folder_path, visualizer)
