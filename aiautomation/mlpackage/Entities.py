@@ -20,6 +20,15 @@ class ClasRegModelEntity:
         self.model_name = model_name
 
 
+class ModelVisualizeEntity:
+    def __init__(self, alg, grid, model_name, search_type, file_name):
+        self.alg = alg
+        self.grid = grid
+        self.model_name = model_name
+        self.search_type = search_type,
+        self.file_name = file_name
+
+
 class MultiClasModelEntity:
     def __init__(self, alg, grid, model_name, gene_grid, gene_alg):
         self.alg = alg
@@ -27,6 +36,12 @@ class MultiClasModelEntity:
         self.model_name = model_name
         self.gene_grid = gene_grid
         self.gene_alg = gene_alg
+
+
+class MultiClassGridEntity:
+    def __init__(self, grid, gene_grid):
+        self.grid = grid
+        self.gene_grid = gene_grid
 
 
 class AccuracyEntity:

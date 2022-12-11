@@ -22,13 +22,11 @@ from aiautomation.mlpackage.StoreData import InputOutputStream
 # IBM EX_AI
 from aix360.algorithms.contrastive import CEMExplainer, KerasClassifier
 from aix360.algorithms.ted.TED_Cartesian import TED_CartesianExplainer
-# from shapash.explainer.smart_explainer import SmartExplainer
 from explainerdashboard import ClassifierExplainer, ExplainerDashboard, RegressionExplainer
 from explainerdashboard import InlineExplainer
 from pandas_profiling import ProfileReport
 from dataprep.eda import create_report
 from autoviz.AutoViz_Class import AutoViz_Class
-from pandas_visual_analysis import VisualAnalysis
 from sklearn.ensemble import IsolationForest
 from sklearn.model_selection import train_test_split
 
@@ -77,7 +75,10 @@ class Repository:
         return data_conversion.synthesize_data(train, df, label_name)
 
     def create_model_folder(self, folder_path):
-        self.io.create_model_folder(folder_path)
+        self.io.create_pickle_folder(folder_path)
+
+    def create_model_visualizer_folder(self, folder_path):
+        self.io.create_visualizer_folder(folder_path)
 
     def run_all_search_and_all_scoring(self, hyper_parameter_tuning, model_entity, search_type):
         search_folder_path = model_entity.model_name + Variable.locationSeparator + search_type
@@ -126,6 +127,15 @@ class Repository:
 
     def concat_to_dataset_location(self, type_name):
         self.datasetLocation = self.datasetLocation + type_name + Variable.locationSeparator
+
+    def run_all_model_visualization(self, model_entity, hyper_parameter_tuning):
+        search_folder_path = model_entity.model_name + Variable.locationSeparator + model_entity.search_type
+        self.create_model_visualizer_folder(search_folder_path)
+
+        t11 = threading.Thread(target=hyper_parameter_tuning.run_all_visualization,
+                               args=([model_entity, search_folder_path]))
+        t11.start()
+        t11.join()
 
     def run_all_search(self, model_entity, hyper_parameter_tuning, is_single_label):
         t11 = threading.Thread(target=self.run_all_search_and_all_scoring,
@@ -261,17 +271,20 @@ class Repository:
             return max(df)
 
     # models
-    def run_model(self, model_entity, hyper_parameter_tuning, is_single_label):
+    def run_model(self, model_entity, hyper_parameter_tuning, is_single_label, should_run_search=True):
         start = time.time()
         print(model_entity.model_name + "Start --------- ")
 
         self.create_model_folder(model_entity.model_name)
-        self.run_all_search(model_entity, hyper_parameter_tuning, is_single_label)
+        if should_run_search:
+            self.run_all_search(model_entity, hyper_parameter_tuning, is_single_label)
+        else:
+            self.run_all_model_visualization(model_entity, hyper_parameter_tuning)
 
         end = time.time()
         print(model_entity.model_name + " Finish. In time of seconds = ", int(end - start), "\n\n\n")
 
-    def run_all_models(self, hyper_parameter_tuning, model_array, is_single_label=True):
+    def run_all_models(self, hyper_parameter_tuning, model_array, is_single_label=True, should_run_search=True):
         self.check_and_create_related_dirs()
         self.update_stored_model_file_name_array()
         self.update_scoring_dict()
@@ -282,9 +295,74 @@ class Repository:
         print("SCORE = ", scores, "\n")
         hyper_parameter_tuning.set_scores(scores[0], scores[1])
         for modelEntity in model_array:
-            t1 = threading.Thread(target=self.run_model, args=([modelEntity, hyper_parameter_tuning, is_single_label]))
+            t1 = threading.Thread(target=self.run_model, args=([modelEntity, hyper_parameter_tuning, is_single_label,
+                                                                should_run_search]))
             t1.start()
             t1.join()
+
+    def get_all_saved_model(self):
+        return self.io.get_all_saved_model_path()
+
+    @staticmethod
+    def check_and_get_search_type(model_file_path):
+        search_type = Variable.typeGrid
+        if Variable.typeGrid in model_file_path:
+            search_type = Variable.typeGrid
+        elif Variable.typeBayes in model_file_path:
+            search_type = Variable.typeBayes
+        elif Variable.typeGene in model_file_path:
+            search_type = Variable.typeGene
+        elif Variable.typeGA in model_file_path:
+            search_type = Variable.typeGA
+        elif Variable.typeOptuna in model_file_path:
+            search_type = Variable.typeOptuna
+        return search_type
+
+    @staticmethod
+    def check_and_get_model_type(model_path):
+        model_type = Variable.typeRidge
+        if Variable.typeRidge in model_path:
+            model_type = Variable.typeRidge
+        elif Variable.typeLogReg in model_path:
+            model_type = Variable.typeLogReg
+        elif Variable.typeLinReg in model_path:
+            model_type = Variable.typeLinReg
+        elif Variable.typeKnn in model_path:
+            model_type = Variable.typeKnn
+        elif Variable.typeDesTree in model_path:
+            model_type = Variable.typeDesTree
+        elif Variable.typeSvc in model_path:
+            model_type = Variable.typeSvc
+        elif Variable.typeRanFor in model_path:
+            model_type = Variable.typeRanFor
+        elif Variable.typeAdaBoost in model_path:
+            model_type = Variable.typeAdaBoost
+        elif Variable.typeGradBoost in model_path:
+            model_type = Variable.typeGradBoost
+        elif Variable.typeXGB in model_path:
+            model_type = Variable.typeXGB
+        elif Variable.typeLGBM in model_path:
+            model_type = Variable.typeLGBM
+        elif Variable.typeCGBM in model_path:
+            model_type = Variable.typeCGBM
+        elif Variable.typeGaussianNB in model_path:
+            model_type = Variable.typeGaussianNB
+        elif Variable.typeBerNB in model_path:
+            model_type = Variable.typeBerNB
+
+        elif Variable.typeKmeans in model_path:
+            model_type = Variable.typeKmeans
+        elif Variable.typeAglo in model_path:
+            model_type = Variable.typeAglo
+        elif Variable.typeBirch in model_path:
+            model_type = Variable.typeBirch
+        elif Variable.typeMiniBatch in model_path:
+            model_type = Variable.typeMiniBatch
+        elif Variable.typeSpecCluster in model_path:
+            model_type = Variable.typeSpecCluster
+        elif Variable.typeGaussianMix in model_path:
+            model_type = Variable.typeGaussianMix
+        return model_type
 
     def show_auto_viz(self, df, file_name, label_name):
         if file_name + Variable.autoviz in self.storedEdaFileNameArray:
@@ -354,7 +432,7 @@ class Repository:
             return
         # dtale_file_path = Variable.edaLocation + Variable.locationSeparator + file_name + Variable.dtale +
         # Variable.htmlExtension dtale.offline_chart(df, filepath=dtale_file_path, title=fileName)
-        dtale.show(df, open_browser = True, host='localhost', subprocess=False)
+        dtale.show(df, open_browser=True, host='localhost', subprocess=False)
         self.write_eda_feather(file_name + Variable.dtale)
 
     def show_data_prep(self, df, file_name):
@@ -474,7 +552,6 @@ class Repository:
         # explainer.model_profile(type = 'conditional', label="conditional",variables="worst texture")
         # Generate lime breakdown plot
         explainer.predict_surrogate(train).plot()
-
         ####### start Arena dashboard #############
         # create empty Arena
         arena = dx.Arena()
@@ -833,6 +910,9 @@ class Repository:
 
     def get_saved_model(self):
         return self.io.get_saved_model()
+
+    def load_model(self, pickle_filename):
+        return self.io.get_model(pickle_filename)
 
     def is_model_present(self):
         return self.io.is_model_present()

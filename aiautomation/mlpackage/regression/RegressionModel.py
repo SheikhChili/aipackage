@@ -22,14 +22,9 @@ class Models:
     def lin_reg(self):
         # define models and parameters
         linreg = LinearRegression()
-        fit_intercept = [True, False]
-        # normalize = [True, False]
-        copy_x = [True, False]
 
-        # define grid search
-        grid = dict(fit_intercept=fit_intercept, copy_X=copy_x)
-
-        clas_reg_model_entity = ClasRegModelEntity(linreg, grid, Variable.typeLinReg)
+        clas_reg_model_entity = ClasRegModelEntity(linreg, self.check_and_get_grid(Variable.typeLinReg),
+                                                   Variable.typeLinReg)
         self.alg_name[linreg] = 'sklearn.linear_model.LinearRegression'
 
         return clas_reg_model_entity
@@ -39,15 +34,9 @@ class Models:
     def rid_reg(self):
         # define models and parameters
         rid_reg = Ridge()
-        alpha = [0.0001, 0.001, 0.01, 0.1, 1.0]
-        # normalize = [True, False]
-        fit_intercept = [True, False]
-        solver = ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga']
 
-        # define grid search
-        grid = dict(alpha=alpha, solver=solver, fit_intercept=fit_intercept)
-
-        clas_reg_model_entity = ClasRegModelEntity(rid_reg, grid, Variable.typeRidge)
+        clas_reg_model_entity = ClasRegModelEntity(rid_reg, self.check_and_get_grid(Variable.typeRidge),
+                                                   Variable.typeRidge)
         self.alg_name[rid_reg] = 'sklearn.linear_model.Ridge'
 
         return clas_reg_model_entity
@@ -57,14 +46,8 @@ class Models:
     def knn(self):
         # define models and parameters
         knn = KNeighborsRegressor()
-        n_neighbors = list(range(1, 21, 2))
-        weights = ['uniform', 'distance']
-        metric = ['euclidean', 'manhattan', 'minkowski']
 
-        # define grid search
-        grid = dict(n_neighbors=n_neighbors, weights=weights, metric=metric)
-
-        clas_reg_model_entity = ClasRegModelEntity(knn, grid, Variable.typeKnn)
+        clas_reg_model_entity = ClasRegModelEntity(knn, self.check_and_get_grid(Variable.typeKnn), Variable.typeKnn)
         self.alg_name[knn] = 'sklearn.neighbors.KNeighborsRegressor'
 
         return clas_reg_model_entity
@@ -74,15 +57,8 @@ class Models:
     def svr(self):
         # define models and parameters
         svr = SVR()
-        kernel = ['linear', 'poly', 'rbf', 'sigmoid']
-        gamma = ['scale', 'auto']
-        c = [100, 10, 1.0, 0.1, 0.01]
-        # epsilon = [0.1,0.2,0.5,0.3]
 
-        # define grid search
-        grid = dict(kernel=kernel, gamma=gamma, C=c)
-
-        clas_reg_model_entity = ClasRegModelEntity(svr, grid, Variable.typeSvc)
+        clas_reg_model_entity = ClasRegModelEntity(svr, self.check_and_get_grid(Variable.typeSvc), Variable.typeSvc)
         self.alg_name[svr] = 'sklearn.svm.SVR'
 
         return clas_reg_model_entity
@@ -92,21 +68,9 @@ class Models:
     def des_tree(self):
         # define models and parameters
         des_tree_reg = DecisionTreeRegressor()
-        criterion = ['mse', 'friedman_mse', 'mae']
-        splitter = ['best', 'random']
-        max_features = ['auto', 'sqrt', 'log2']
-        max_depth = list(range(5, 150, 15))
-        min_samples_leaf = list(range(10, 150, 10))
-        min_samples_leaf.append(1)
-        max_leaf_nodes = list(range(5, 150, 15))
-        min_samples_split = list(range(10, 150, 10))
 
-        # define grid search
-        grid = dict(criterion=criterion, splitter=splitter, max_features=max_features, max_depth=max_depth,
-                    min_samples_leaf=min_samples_leaf,
-                    max_leaf_nodes=max_leaf_nodes, min_samples_split=min_samples_split)
-
-        clas_reg_model_entity = ClasRegModelEntity(des_tree_reg, grid, Variable.typeDesTree)
+        clas_reg_model_entity = ClasRegModelEntity(des_tree_reg, self.check_and_get_grid(Variable.typeDesTree),
+                                                   Variable.typeDesTree)
         self.alg_name[des_tree_reg] = 'sklearn.tree.DecisionTreeRegressor'
 
         return clas_reg_model_entity
@@ -116,20 +80,9 @@ class Models:
     def ran_for(self):
         # define models and parameters
         ran_for_reg = RandomForestRegressor()
-        n_estimators = [int(x) for x in np.linspace(start=100, stop=1200, num=12)]
-        max_features = ['auto', 'sqrt', 'log2']
-        max_depth = [int(x) for x in np.linspace(5, 30, num=6)]
-        max_depth.append(None)
-        min_samples_split = [2, 5, 10, 15, 100]
-        min_samples_leaf = [1, 2, 5, 10]
-        criterion = ['mse', 'mae']
 
-        # define grid search
-        grid = dict(n_estimators=n_estimators, max_features=max_features, max_depth=max_depth,
-                    min_samples_split=min_samples_split,
-                    min_samples_leaf=min_samples_leaf, criterion=criterion)
-
-        clas_reg_model_entity = ClasRegModelEntity(ran_for_reg, grid, Variable.typeRanFor)
+        clas_reg_model_entity = ClasRegModelEntity(ran_for_reg, self.check_and_get_grid(Variable.typeRanFor),
+                                                   Variable.typeRanFor)
         self.alg_name[ran_for_reg] = 'sklearn.ensemble.RandomForestRegressor'
 
         return clas_reg_model_entity
@@ -139,21 +92,9 @@ class Models:
     def grad_boost(self):
         # define models and parameters
         gra_boost_reg = GradientBoostingRegressor()
-        loss = ['ls', 'lad', 'huber', 'quantile']
-        learning_rate = [0.03, 0.001, 0.01, 0.1, 0.2, 0.3]
-        n_estimators = list(range(100, 1000, 100))
-        criterion = ['friedman_mse', 'mse', 'mae']
-        subsample = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-        # alpha = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-        max_features = ['auto', 'sqrt', 'log2']
-        max_depth = list(range(1, 11, 1))
 
-        # define grid search
-        grid = dict(loss=loss, learning_rate=learning_rate, n_estimators=n_estimators, criterion=criterion,
-                    subsample=subsample,
-                    max_features=max_features, max_depth=max_depth)
-
-        clas_reg_model_entity = ClasRegModelEntity(gra_boost_reg, grid, Variable.typeGradBoost)
+        clas_reg_model_entity = ClasRegModelEntity(gra_boost_reg, self.check_and_get_grid(Variable.typeGradBoost),
+                                                   Variable.typeGradBoost)
         self.alg_name[gra_boost_reg] = 'sklearn.ensemble.GradientBoostingRegressor'
 
         return clas_reg_model_entity
@@ -172,14 +113,9 @@ class Models:
 
         # define models and parameters
         ada_boost_reg = AdaBoostRegressor()
-        n_estimators = list(range(50, 1001, 50))
-        learning_rate = [0.001, 0.01, 0.1]
-        loss = ['linear', 'square', 'exponential']
 
-        # define grid search
-        grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, loss=loss)
-
-        clas_reg_model_entity = ClasRegModelEntity(ada_boost_reg, grid, Variable.typeAdaBoost)
+        clas_reg_model_entity = ClasRegModelEntity(ada_boost_reg, self.check_and_get_grid(Variable.typeAdaBoost),
+                                                   Variable.typeAdaBoost)
         self.alg_name[ada_boost_reg] = 'sklearn.ensemble.AdaBoostRegressor'
 
         return clas_reg_model_entity
@@ -189,21 +125,9 @@ class Models:
     def xgb(self):
         # define models and parameters
         xgb_model = XGBRegressor()
-        max_depth = list(range(3, 10, 2))
-        min_child_weight = list(range(1, 6, 2))
-        gamma = [float(i / 10.0) for i in range(0, 5)]
-        n_estimators = list(range(100, 1000, 100))
-        learning_rate = [0.03, 0.001, 0.01, 0.1, 0.2, 0.3]
-        subsample = [i / 10.0 for i in range(6, 10)],
-        col_sample_by_tree = [i / 10.0 for i in range(6, 10)]
-        reg_alpha = [1e-5, 1e-2, 0.1, 1, 100, 0, 0.001, 0.005, 0.01, 0.05]
 
-        # define grid search
-        grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, subsample=subsample, max_depth=max_depth,
-                    min_child_weight=min_child_weight, gamma=gamma, colsample_bytree=col_sample_by_tree,
-                    reg_alpha=reg_alpha)
-
-        clas_reg_model_entity = ClasRegModelEntity(xgb_model, grid, Variable.typeXgb)
+        clas_reg_model_entity = ClasRegModelEntity(xgb_model, self.check_and_get_grid(Variable.typeXGB),
+                                                   Variable.typeXGB)
         self.alg_name[xgb_model] = 'xgboost.XGBRegressor'
 
         return clas_reg_model_entity
@@ -213,41 +137,158 @@ class Models:
     def light_gbm(self):
         # define models and parameters
         lightgbm = lgb.LGBMRegressor()
-        num_leaves = list(range(50, 1000, 50))
-        learning_rate = [0.03, 0.001, 0.01, 0.1, 0.2, 0.3]
-        max_depth = list(range(3, 10, 2))
-        max_bin = list(range(100, 1000, 100))
 
-        # define grid search
-        grid = dict(num_leaves=num_leaves, learning_rate=learning_rate, max_depth=max_depth, max_bin=max_bin)
-
-        clas_reg_model_entity = ClasRegModelEntity(lightgbm, grid, Variable.typeLGBM)
+        clas_reg_model_entity = ClasRegModelEntity(lightgbm, self.check_and_get_grid(Variable.typeLGBM),
+                                                   Variable.typeLGBM)
         self.alg_name[lightgbm] = 'lgb.LGBMRegressor'
 
         return clas_reg_model_entity
 
     # -----------------------------------------------------------------------------
     # Cat Boost GBM
-    @staticmethod
-    def cat_boost_gbm():
+    def cat_boost_gbm(self):
         # define models and parameters
         catboost = CatBoostRegressor()
-        depth = list(range(1, 11, 1))
-        iterations = [250, 100, 500, 1000]
-        learning_rate = [0.03, 0.001, 0.01, 0.1, 0.2, 0.3]
-        l2_leaf_reg = [3, 1, 5, 10, 100]
-        border_count = [32, 5, 10, 20, 50, 100, 200],
-        ctr_border_count = [50, 5, 10, 20, 100, 200],
-        thread_count = 4
 
-        # define grid search
-        grid = dict(depth=depth, iterations=iterations, learning_rate=learning_rate, l2_leaf_reg=l2_leaf_reg,
-                    border_count=border_count, ctr_border_count=ctr_border_count, thread_count=thread_count)
-
-        clas_reg_model_entity = ClasRegModelEntity(catboost, grid, Variable.typeCGBM)
+        clas_reg_model_entity = ClasRegModelEntity(catboost, self.check_and_get_grid(Variable.typeCGBM),
+                                                   Variable.typeCGBM)
         # self.alg_name[catboost] = 'catboost.CatBoostRegressor'
 
         return clas_reg_model_entity
+
+    @staticmethod
+    def check_and_get_grid(model_type):
+        grid = dict()
+        if model_type == Variable.typeRidge:
+            alpha = [0.0001, 0.001, 0.01, 0.1, 1.0]
+            # normalize = [True, False]
+            fit_intercept = [True, False]
+            solver = ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga']
+
+            # define grid search
+            grid = dict(alpha=alpha, solver=solver, fit_intercept=fit_intercept)
+
+        elif model_type == Variable.typeLinReg:
+            fit_intercept = [True, False]
+            # normalize = [True, False]
+            copy_x = [True, False]
+
+            # define grid search
+            grid = dict(fit_intercept=fit_intercept, copy_X=copy_x)
+
+        elif model_type == Variable.typeKnn:
+            n_neighbors = list(range(1, 21, 2))
+            weights = ['uniform', 'distance']
+            metric = ['euclidean', 'manhattan', 'minkowski']
+
+            # define grid search
+            grid = dict(n_neighbors=n_neighbors, weights=weights, metric=metric)
+
+        elif model_type == Variable.typeSvc:
+            kernel = ['linear', 'poly', 'rbf', 'sigmoid']
+            gamma = ['scale', 'auto']
+            c = [100, 10, 1.0, 0.1, 0.01]
+            # epsilon = [0.1,0.2,0.5,0.3]
+
+            # define grid search
+            grid = dict(kernel=kernel, gamma=gamma, C=c)
+
+        elif model_type == Variable.typeDesTree:
+            criterion = ['mse', 'friedman_mse', 'mae']
+            splitter = ['best', 'random']
+            max_features = ['auto', 'sqrt', 'log2']
+            max_depth = list(range(5, 150, 15))
+            min_samples_leaf = list(range(10, 150, 10))
+            min_samples_leaf.append(1)
+            max_leaf_nodes = list(range(5, 150, 15))
+            min_samples_split = list(range(10, 150, 10))
+
+            # define grid search
+            grid = dict(criterion=criterion, splitter=splitter, max_features=max_features, max_depth=max_depth,
+                        min_samples_leaf=min_samples_leaf,
+                        max_leaf_nodes=max_leaf_nodes, min_samples_split=min_samples_split)
+
+        elif model_type == Variable.typeRanFor:
+            n_estimators = [int(x) for x in np.linspace(start=100, stop=1200, num=12)]
+            max_features = ['auto', 'sqrt', 'log2']
+            max_depth = [int(x) for x in np.linspace(5, 30, num=6)]
+            max_depth.append(None)
+            min_samples_split = [2, 5, 10, 15, 100]
+            min_samples_leaf = [1, 2, 5, 10]
+            criterion = ['mse', 'mae']
+
+            # define grid search
+            grid = dict(n_estimators=n_estimators, max_features=max_features, max_depth=max_depth,
+                        min_samples_split=min_samples_split,
+                        min_samples_leaf=min_samples_leaf, criterion=criterion)
+
+        elif model_type == Variable.typeGradBoost:
+            # Whole values
+            loss = ['ls', 'lad', 'huber', 'quantile']
+            learning_rate = [0.03, 0.001, 0.01, 0.1, 0.2, 0.3]
+            n_estimators = list(range(100, 1000, 100))
+            criterion = ['friedman_mse', 'mse', 'mae']
+            subsample = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+            # alpha = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+            max_features = ['auto', 'sqrt', 'log2']
+            max_depth = list(range(1, 11, 1))
+
+            # define grid search
+            grid = dict(loss=loss, learning_rate=learning_rate, n_estimators=n_estimators, criterion=criterion,
+                        subsample=subsample,
+                        max_features=max_features, max_depth=max_depth)
+
+        elif model_type == Variable.typeAdaBoost:
+            # define models and parameters
+            n_estimators = list(range(50, 1001, 50))
+            learning_rate = [0.001, 0.01, 0.1]
+            loss = ['linear', 'square', 'exponential']
+
+            # define grid search
+            grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, loss=loss)
+
+        elif model_type == Variable.typeXGB:
+            # Whole values
+            max_depth = list(range(3, 10, 2))
+            min_child_weight = list(range(1, 6, 2))
+            gamma = [float(i / 10.0) for i in range(0, 5)]
+            n_estimators = list(range(100, 1000, 100))
+            learning_rate = [0.03, 0.001, 0.01, 0.1, 0.2, 0.3]
+            subsample = [i / 10.0 for i in range(6, 10)],
+            col_sample_by_tree = [i / 10.0 for i in range(6, 10)]
+            reg_alpha = [1e-5, 1e-2, 0.1, 1, 100, 0, 0.001, 0.005, 0.01, 0.05]
+
+            # define grid search
+            grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, subsample=subsample,
+                        max_depth=max_depth,
+                        min_child_weight=min_child_weight, gamma=gamma, colsample_bytree=col_sample_by_tree,
+                        reg_alpha=reg_alpha)
+
+        elif model_type == Variable.typeLGBM:
+            # Whole values
+            num_leaves = list(range(50, 1000, 50))
+            learning_rate = [0.03, 0.001, 0.01, 0.1, 0.2, 0.3]
+            max_depth = list(range(3, 10, 2))
+            max_bin = list(range(100, 1000, 100))
+
+            # define grid search
+            grid = dict(num_leaves=num_leaves, learning_rate=learning_rate, max_depth=max_depth, max_bin=max_bin)
+
+        elif model_type == Variable.typeCGBM:
+            # Whole values
+            depth = list(range(1, 11, 1))
+            iterations = [250, 100, 500, 1000]
+            learning_rate = [0.03, 0.001, 0.01, 0.1, 0.2, 0.3]
+            l2_leaf_reg = [3, 1, 5, 10, 100]
+            border_count = [32, 5, 10, 20, 50, 100, 200],
+            ctr_border_count = [50, 5, 10, 20, 100, 200],
+            thread_count = 4
+
+            # define grid search
+            grid = dict(depth=depth, iterations=iterations, learning_rate=learning_rate, l2_leaf_reg=l2_leaf_reg,
+                        border_count=border_count, ctr_border_count=ctr_border_count, thread_count=thread_count)
+
+        return grid
 
     '''#-----------------------------------------------------------------------------
     #HyperParameters
@@ -298,3 +339,5 @@ class Models:
 
     def get_algorithm_name(self):
         return self.alg_name
+
+

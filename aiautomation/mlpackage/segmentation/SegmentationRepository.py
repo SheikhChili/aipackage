@@ -2,6 +2,7 @@
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from aiautomation.mlpackage.Repository import Repository
+from aiautomation.mlpackage.Entities import ModelVisualizeEntity
 from aiautomation.mlpackage.PackageVariable import Variable
 from aiautomation.mlpackage.Entities import HyperParamEntity
 from aiautomation.mlpackage.segmentation.SegmentationModel import Models
@@ -55,3 +56,28 @@ class SGRepository(Repository):
         hyper_parameter_tuning = HyperParameterTuning(hp_entity)
 
         super().run_all_models(hyper_parameter_tuning, model_array)
+
+    def run_all_visualize_models(self, x_train, x_val, y_train, y_val):
+        models = Models()
+        saved_model_array = super().get_all_saved_model()
+
+        cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=1, random_state=1)
+        hp_entity = HyperParamEntity(x_train, y_train, x_val, y_val, models.get_algorithm_name(), cv,
+                                     Variable.typeSegmentation)
+
+        hyper_parameter_tuning = HyperParameterTuning(hp_entity)
+
+        super().run_all_models(hyper_parameter_tuning, self.create_model_visualize_entity_array(models,
+                                                                                                saved_model_array),
+                               should_run_search=False)
+
+    @staticmethod
+    def create_model_visualize_entity_array(models, saved_model_array):
+        saved_entity_array = []
+        for model_path in saved_model_array:
+            model = super().load_model(model_path)
+            model_type = super().check_and_get_model_type(model_path)
+            file_name = model_path.split(Variable.locationSeparator)[-1].removesuffix(Variable.pickleExtension)
+            saved_entity_array.append(ModelVisualizeEntity(model, models.check_and_get_grid_entity(model_type), model_type,
+                                                           super().check_and_get_search_type(model), file_name))
+        return saved_entity_array

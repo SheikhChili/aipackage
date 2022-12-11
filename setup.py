@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='ai_automation',
-    version='3.0.1',
+    version='3.0.2',
     license='MIT',
     author="SheikhChili",
     author_email='sparrow.shreyas@gmail.com',

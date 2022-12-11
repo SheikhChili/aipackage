@@ -48,16 +48,14 @@ class InputOutputStream:
         df = pd.DataFrame(big_array, columns=field)
         df.to_feather(filename)
 
-
     def write_eda_feather(self, file_name):
         filename = self.storeDataDirName + Variable.edaFileName
         field = ['Filename']
-        df = self.get_stored_model_data(filename)  
+        df = self.get_stored_model_data(filename)
         big_array = df.values.tolist()
         big_array.append([file_name])
         df = pd.DataFrame(big_array, columns=field)
         df.to_feather(filename)
-
 
     def get_stored_model_file_name_array(self):
         df = self.get_stored_model_data(self.storeDataDirName + Variable.modelFileName)
@@ -71,7 +69,7 @@ class InputOutputStream:
         if df.empty:
             return []
         else:
-            return df['Filename'].values.tolist()        
+            return df['Filename'].values.tolist()
 
     @staticmethod
     def get_stored_model_data(filename):
@@ -80,18 +78,28 @@ class InputOutputStream:
         else:
             return pd.DataFrame()
 
+    def get_all_saved_model_path(self):
+        model_path_array = []
+        for dir_name in os.listdir(self.storeDataDirName + Variable.allPickleFolderName):
+            for model_dir_name in os.listdir(self.storeDataDirName + Variable.allPickleFolderName + Variable.locationSeparator + dir_name):
+                for search_dir_name in os.listdir(self.storeDataDirName + Variable.allPickleFolderName + Variable
+                        .locationSeparator + dir_name + Variable.locationSeparator + model_dir_name):
+                    pickle_filename = self.storeDataDirName + Variable.allPickleFolderName + Variable.locationSeparator + dir_name + Variable.locationSeparator + model_dir_name + Variable.locationSeparator + search_dir_name
+                    model_path_array.append(pickle_filename)
+        return model_path_array
+
     def save_best_model(self, model_name, model):
         self.remove_all_pickle_file()
         self.save_model(model_name, model, self.storeDataDirName + Variable.bestPickleFolderName)
 
     def save_all_model(self, model_name, folder_path, model):
         pickle_folder_path = self.storeDataDirName + Variable.allPickleFolderName + Variable.locationSeparator \
-                           + folder_path
+                             + folder_path
         self.save_model(model_name, model, pickle_folder_path)
 
     def save_all_visualizer(self, model_name, folder_path, model, ):
         visualizer_folder_path = self.storeDataDirName + Variable.allVisualizerFolderName + Variable.locationSeparator \
-                               + folder_path
+                                 + folder_path
         self.save_model(model_name, model, visualizer_folder_path)
 
     @staticmethod
@@ -118,16 +126,15 @@ class InputOutputStream:
 
     def create_model_folder(self, folder_path):
         self.create_pickle_folder(folder_path)
-        self.create_visualizer_folder(folder_path)
 
     def create_visualizer_folder(self, folder_path):
         visualizer_folder_path = self.storeDataDirName + Variable.allVisualizerFolderName + Variable.locationSeparator \
-                               + folder_path
+                                 + folder_path
         self.check_and_create_dir(visualizer_folder_path)
 
     def create_pickle_folder(self, folder_path):
         pickle_folder_path = self.storeDataDirName + Variable.allPickleFolderName + Variable.locationSeparator \
-                           + folder_path
+                             + folder_path
         self.check_and_create_dir(pickle_folder_path)
 
     @staticmethod
@@ -150,6 +157,9 @@ class InputOutputStream:
         pickle_model_dir = self.storeDataDirName + Variable.bestPickleFolderName
         pickle_filename = pickle_model_dir + Variable.locationSeparator + os.listdir(pickle_model_dir)[0]
         print(pickle_filename)
+        return self.get_model(pickle_filename)
+
+    def get_model(self, pickle_filename):
         pickle_file = open(pickle_filename, Variable.readBinary)
         return pickle.load(pickle_file)
 

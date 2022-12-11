@@ -63,7 +63,7 @@ class Variable:
     typeRanFor = 'RANDOM_FOREST_'
     typeGradBoost = 'GRADIENT_BOOSTING_'
     typeAdaBoost = 'ADAPTIVE_BOOSTING_'
-    typeXgb = 'XGB_'
+    typeXGB = 'XGB_'
     typeLGBM = 'LIGHT_GBM_'
     typeCGBM = 'CAT_BOOST_GBM_'
     typeGaussianNB = 'GAUSSIAN_NB_'

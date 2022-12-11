@@ -30,7 +30,7 @@ class HyperParameterTuning:
         self.actualFolderName = folder_name
 
     def init_wand_b(self, name, custom_dir):
-        wandb.init(project=self.actualFolderName, name=name, save_code=True, dir=custom_dir)
+        wandb.init(project=self.actualFolderName, name=name, save_code=True, dir=custom_dir, group=name, mode="offline")
 
     def update_io(self, io):
         self.io = io
@@ -91,11 +91,6 @@ class HyperParameterTuning:
             score = grid_search.best_score_
             val_score = grid_search.score(self.hPEntity.x_val, self.hPEntity.y_val)
 
-        self.run_all_visualization(grid_search, self.hPEntity.cv, self.hPEntity.scoring, self.hPEntity.x_train,
-                                   self.hPEntity.y_train, self.hPEntity.x_val, self.hPEntity.y_val, model_entity.grid,
-                                   file_name,
-                                   self.hPEntity.model_type, folder_path)
-
         self.check_and_save_model(score, val_score, file_name, folder_path, grid_search)
 
         return AccuracyEntity(file_name, score, val_score, str(grid_search.best_params_))
@@ -109,7 +104,7 @@ class HyperParameterTuning:
         grid = model_entity.grid
 
         # Objective
-        def objective(params):
+        def objective():
             temp_score = cross_val_score(model, x_train, y_train, cv=self.hPEntity.cv,
                                          scoring=self.hPEntity.scoring).mean()
             # We aim to maximize accuracy, therefore we return it as a negative value
@@ -132,10 +127,6 @@ class HyperParameterTuning:
         if self.hPEntity.model_type != Variable.typeSegmentation:
             score = trials.best_trial['result']['loss']
             val_score = alg.score(self.hPEntity.x_val, self.hPEntity.y_val)
-
-        self.run_all_visualization(alg, self.hPEntity.cv, self.hPEntity.scoring, self.hPEntity.x_train,
-                                   self.hPEntity.y_train, self.hPEntity.x_val, self.hPEntity.y_val, grid, file_name,
-                                   self.hPEntity.model_type, folder_path)
 
         self.check_and_save_model(score, val_score, file_name, folder_path, alg)
 
@@ -176,10 +167,6 @@ class HyperParameterTuning:
             score = model.score(x_train, y_train)
             val_score = model.score(self.hPEntity.x_val, self.hPEntity.y_val)
 
-        self.run_all_visualization(model, self.hPEntity.cv, self.hPEntity.scoring, self.hPEntity.x_train,
-                                   self.hPEntity.y_train, self.hPEntity.x_val, self.hPEntity.y_val, grid, file_name,
-                                   self.hPEntity.model_type, folder_path)
-
         self.check_and_save_model(score, val_score, file_name, folder_path, model)
 
         return AccuracyEntity(file_name, score, val_score, "example")
@@ -216,10 +203,6 @@ class HyperParameterTuning:
             score = trial.value
             val_score = alg.score(self.hPEntity.x_val, self.hPEntity.y_val)
 
-        self.run_all_visualization(alg, self.hPEntity.cv, self.hPEntity.scoring, self.hPEntity.x_train,
-                                   self.hPEntity.y_train, self.hPEntity.x_val, self.hPEntity.y_val, grid, file_name,
-                                   self.hPEntity.model_type, folder_path)
-
         self.check_and_save_model(score, val_score, file_name, folder_path, alg)
 
         return AccuracyEntity(file_name, score, val_score, str(trial.params))
@@ -237,11 +220,6 @@ class HyperParameterTuning:
         if self.hPEntity.model_type != Variable.typeSegmentation:
             score = model.score(self.hPEntity.x_train, self.hPEntity.y_train)
             val_score = model.score(self.hPEntity.x_val, self.hPEntity.y_val)
-
-        self.run_all_visualization(model, self.hPEntity.cv, self.hPEntity.scoring, self.hPEntity.x_train,
-                                   self.hPEntity.y_train, self.hPEntity.x_val, self.hPEntity.y_val, model_entity.grid,
-                                   file_name,
-                                   self.hPEntity.model_type, folder_path)
 
         self.check_and_save_model(score, val_score, file_name, folder_path, model)
 
@@ -285,7 +263,7 @@ class HyperParameterTuning:
         matplotlib.use('Agg')
         self.start_learning_curve(model, cv, scoring, x_train, y_train, model_name, folder_path)
         print("\n")
-        # self.startValidationCurve(model, cv, scoring, x_val, y_val, grid, modelName, folderPath)
+        self.start_validation_curve(model, cv, scoring, x_val, y_val, grid, model_name, folder_path)
 
     def start_learning_curve(self, model, cv, scoring, x, y, model_name, folder_path):
         visualizer = LearningCurve(model, cv=cv, scoring=scoring, n_jobs=-1)
@@ -331,6 +309,12 @@ class HyperParameterTuning:
             d = model.decision_function(x_val)
             d_2d = np.c_[-d, d]
             return softmax(d_2d)
+
+    def run_all_visualization(self, model_visualize_entity, folder_path):
+        self.run_all_visualization(self.hPEntity.cv, self.hPEntity.x_train,
+                                   self.hPEntity.y_train, self.hPEntity.x_val, self.hPEntity.y_val,
+                                   model_visualize_entity.grid, model_visualize_entity.file_name,
+                                   self.hPEntity.model_type, folder_path)
 
     def run_all_visualization(self, model, cv, scoring, x_train, y_train, x_val, y_val, grid, model_name, model_type,
                               folder_path):
